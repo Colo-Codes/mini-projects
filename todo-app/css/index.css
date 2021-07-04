@@ -138,6 +138,32 @@ div [id^='sheet-'] {
     border: 1px solid #d5d5d5;
     border-radius: 50%;
     margin: auto 15px auto 15px;
+    cursor: pointer;
+}
+
+.todo--tasks-list--item--checkbox--checked {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 1px solid black;
+    border-radius: 50%;
+    margin: auto 15px auto 15px;
+    cursor: pointer;
+    background: url('../images/check.png') no-repeat center;
+    background-size: 22px 22px;
+    filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
+        brightness(103%) contrast(91%);
+}
+
+.todo--tasks-list--item--description--checked {
+    font-size: 1rem;
+    color: #6d6d6d;
+    opacity: 25%;
+    text-decoration: line-through;
+    height: 46px;
+    margin: auto 0;
+    list-style: none;
+    padding-top: 15px;
 }
 
 /* SECTION Add task */
@@ -149,4 +175,50 @@ div [id^='sheet-'] {
         brightness(103%) contrast(91%);
     position: relative;
     z-index: 10;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 10;
+    padding-top: 5rem; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #888;
+    width: 420px;
+    border-radius: 10px;
+    box-shadow: 5px 15px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.input-task {
+    height: 2rem;
+    width: 90%;
 }
