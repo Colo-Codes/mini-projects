@@ -30,3 +30,4 @@ const loadStartingTasks = () => {
 
 loadStartingTasks();
 
+// document.querySelector(".todo--tasks-list--item--description").textContent = itemsList[0].task;

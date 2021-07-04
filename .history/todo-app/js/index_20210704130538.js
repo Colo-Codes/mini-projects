@@ -20,13 +20,6 @@ const itemsList = [
     },
 ];
 
-const loadStartingTasks = () => {
-    const startingTasks = Array.from(document.querySelectorAll(".todo--tasks-list--item--description"));
+document.querySelector(".todo--tasks-list--item--description").textContent = itemsList[0].task;
 
-    startingTasks.forEach((element, i) => {
-        element.textContent = itemsList[i].task;
-    });
-}
-
-loadStartingTasks();
-
+console.log(document.querySelector(".todo--tasks-list--item--description"));
