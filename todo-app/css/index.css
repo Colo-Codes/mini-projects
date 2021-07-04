@@ -235,13 +235,8 @@ div [id^='sheet-'] {
     cursor: pointer;
 }
 
-.input-task {
-    height: 2rem;
-    width: 90%;
-}
-
 /* Add task button */
-.btn-add-task {
+#btn-add-task {
     background-color: #f3904f;
     margin-top: 10px;
     border-radius: 10px;
@@ -253,7 +248,7 @@ div [id^='sheet-'] {
     width: 100px;
 }
 
-.btn-add-task:hover {
+#btn-add-task:hover {
     background-color: #ffb482;
     color: #a44d13;
     cursor: pointer;
