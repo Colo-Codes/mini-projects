@@ -37,6 +37,10 @@ const displayTasks = () => {
         </li>`);
     });
     itemsList.reverse(); // Back to normal FIXME
+
+    // Checkboxes
+    const checkBox = Array.from(document.querySelectorAll('.todo--tasks-list--item--checkbox'));
+    checkCheckBox(checkBox);
 };
 
 const lineThroughText = (i) => {
@@ -44,19 +48,17 @@ const lineThroughText = (i) => {
     itemToLineThrough[i].classList.toggle('todo--tasks-list--item--description--checked');
 };
 
-// SECTION ToDo list behaviour
+const checkCheckBox = checkBox => {
+    checkBox.forEach((element, i) => {
+        element.addEventListener('click', function () {
+            element.classList.toggle('todo--tasks-list--item--checkbox--checked');
+            itemsList[i].completed = !itemsList[i].completed;
+            lineThroughText(i);
+        });
+    });
+}
 
 displayTasks();
-
-const checkBox = Array.from(document.querySelectorAll('.todo--tasks-list--item--checkbox'));
-
-checkBox.forEach((element, i) => {
-    element.addEventListener('click', function () {
-        element.classList.toggle('todo--tasks-list--item--checkbox--checked');
-        itemsList[i].completed = !itemsList[i].completed;
-        lineThroughText(i);
-    });
-})
 
 // SECTION Add new task
 
