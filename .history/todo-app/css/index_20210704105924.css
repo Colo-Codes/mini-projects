@@ -1,0 +1,23 @@
+/* Initial reset */
+
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    outline: 1px dashed blue; /* Debugging purposes */
+}
+
+.todo {
+    margin-top: 20vh;
+    margin: auto;
+    width: 350px;
+    height: 500px;
+    background-color: azure;
+}

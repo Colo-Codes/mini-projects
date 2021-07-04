@@ -13,7 +13,7 @@ html {
     box-sizing: inherit;
     margin: 0;
     padding: 0;
-    /*outline: 1px dashed blue; /* Debugging purposes */
+    outline: 1px dashed blue; /* Debugging purposes */
 }
 
 body {
@@ -31,7 +31,7 @@ body {
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100vh;
+    height: 80vh;
 }
 
 .todo {
@@ -41,56 +41,20 @@ body {
     height: 500px;
     background-color: white;
     border-radius: 10px 10px 0 0;
-    box-shadow: 0px 30px 12px rgba(0, 0, 0, 0.15);
 }
 
-div [id^='sheet-'] {
-    margin: auto;
-    border-radius: 0 0 10px 10px;
-    -webkit-filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.15));
-    filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.15));
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=30, Color='#444')";
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=30, Color='#444')";
-    /* trapezoidal shape */
-    border-bottom: 95px solid white;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-}
 #sheet-1-3d {
-    width: 370px;
+    background-color: blue;
+    width: 350px;
     height: 95px;
     margin: auto;
     border-radius: 0 0 10px 10px;
 
-    position: relative;
-    z-index: 1;
-}
-#sheet-2-3d {
-    width: 354px;
-    height: 95px;
-    margin: auto;
-    margin-top: -80px;
-    border-radius: 0 0 10px 10px;
-    position: relative;
-    z-index: -1;
-}
-#sheet-3-3d {
-    width: 338px;
-    height: 95px;
-    margin: auto;
-    margin-top: -80px;
-    border-radius: 0 0 10px 10px;
-    position: relative;
-    z-index: -2;
-}
-#sheet-4-3d {
-    width: 322px;
-    height: 95px;
-    margin: auto;
-    margin-top: -80px;
-    border-radius: 0 0 10px 10px;
-    position: relative;
-    z-index: -3;
+    border-bottom: 100px solid red;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    height: 0;
+    width: 100px;
 }
 
 #todo--header header {

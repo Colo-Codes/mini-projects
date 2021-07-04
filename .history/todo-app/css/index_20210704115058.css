@@ -41,14 +41,13 @@ body {
     height: 500px;
     background-color: white;
     border-radius: 10px 10px 0 0;
-    box-shadow: 0px 30px 12px rgba(0, 0, 0, 0.15);
 }
 
 div [id^='sheet-'] {
     margin: auto;
     border-radius: 0 0 10px 10px;
-    -webkit-filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.15));
-    filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.15));
+    -webkit-filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.25));
+    filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.25));
     -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=30, Color='#444')";
     filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=30, Color='#444')";
     /* trapezoidal shape */
@@ -84,13 +83,13 @@ div [id^='sheet-'] {
     z-index: -2;
 }
 #sheet-4-3d {
-    width: 322px;
+    width: 338px;
     height: 95px;
     margin: auto;
     margin-top: -80px;
     border-radius: 0 0 10px 10px;
     position: relative;
-    z-index: -3;
+    z-index: -2;
 }
 
 #todo--header header {
