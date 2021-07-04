@@ -38,14 +38,23 @@ body {
 
 /* SECTION ToDo container */
 
-.todo {
+#todo--header {
     margin: auto;
     margin-top: 20vh;
     width: 350px;
-    height: 500px;
+    height: 100px;
     background-color: white;
     border-radius: 10px 10px 0 0;
     box-shadow: 0px 30px 12px rgba(0, 0, 0, 0.15);
+}
+
+#todo--tasks-list {
+    margin: auto;
+    width: 350px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 0px 30px 12px rgba(0, 0, 0, 0.15);
+    overflow: auto;
 }
 
 /* ToDo shapes and shadows */
@@ -116,10 +125,6 @@ div [id^='sheet-'] {
 
 /* SECTION ToDo list of tasks */
 
-#todo--tasks-list {
-    margin-top: 1.875rem;
-}
-
 .todo--tasks-list--item {
     font-size: 1rem;
     color: #6d6d6d;
@@ -172,6 +177,7 @@ div [id^='sheet-'] {
     cursor: pointer;
     width: 44px;
     margin: auto;
+    padding-top: 10px;
     filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
         brightness(103%) contrast(91%);
     position: relative;
