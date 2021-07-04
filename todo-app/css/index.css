@@ -169,6 +169,7 @@ div [id^='sheet-'] {
 /* SECTION Add task */
 
 #todo--footer #add-task {
+    cursor: pointer;
     width: 44px;
     margin: auto;
     filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
@@ -203,10 +204,20 @@ div [id^='sheet-'] {
     box-shadow: 5px 15px 10px rgba(0, 0, 0, 0.3);
 }
 
-.input-task {
+#input-task {
     border-radius: 10px;
     border: 1px solid #c9c9c9;
     padding-left: 1rem;
+    height: 2rem;
+    display: block;
+    width: 93%;
+}
+
+#input-task:active,
+#input-task:focus {
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid #c9c9c9;
 }
 
 /* The Close Button */

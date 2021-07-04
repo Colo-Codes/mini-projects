@@ -58,6 +58,8 @@ const span = document.getElementsByClassName("close")[0];
 
 addTaskButton.onclick = function () {
     modal.style.display = "block";
+    document.getElementById('input-task').focus();
+
 }
 
 // When the user clicks on <span> (x), close the modal
