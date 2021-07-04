@@ -138,15 +138,5 @@ div [id^='sheet-'] {
     border: 1px solid #d5d5d5;
     border-radius: 50%;
     margin: auto 15px auto 15px;
-}
-
-/* SECTION Add task */
-
-#todo--footer #add-task {
-    width: 44px;
-    margin: auto;
-    filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
-        brightness(103%) contrast(91%);
-    position: relative;
-    z-index: 10;
+    padding-top: 15px;
 }

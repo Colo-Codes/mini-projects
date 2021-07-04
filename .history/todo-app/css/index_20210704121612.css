@@ -141,12 +141,5 @@ div [id^='sheet-'] {
 }
 
 /* SECTION Add task */
-
-#todo--footer #add-task {
-    width: 44px;
-    margin: auto;
-    filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
-        brightness(103%) contrast(91%);
-    position: relative;
-    z-index: 10;
+.todo--footer {
 }

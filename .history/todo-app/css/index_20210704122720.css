@@ -149,4 +149,5 @@ div [id^='sheet-'] {
         brightness(103%) contrast(91%);
     position: relative;
     z-index: 10;
+    box-shadow: 10px 10px 10px balck;
 }
