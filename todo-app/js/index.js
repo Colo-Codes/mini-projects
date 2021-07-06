@@ -22,6 +22,22 @@ const itemsList = [
 
 // SECTION Function definitions
 
+const updateDeleteButtons = () => {
+    const deleteButtons = document.querySelectorAll('.delete-task');
+    deleteButtons.forEach((button, i) => {
+        button.removeEventListener('click', () => { });
+    });
+    deleteButtons.forEach((button, i) => {
+        button.addEventListener('click', () => {
+            console.log('click:', i);
+            console.log(Array.from(document.querySelectorAll('li'))[i]);
+            itemsList.splice(i, 1);
+
+            displayTasks();
+        });
+    });
+};
+
 const displayTasks = () => {
     const list = document.getElementById('todo--tasks-list--items-list');
     // Clear list
@@ -34,13 +50,19 @@ const displayTasks = () => {
         list.insertAdjacentHTML('afterbegin', `<li class="todo--tasks-list--item">
             <span class="todo--tasks-list--item--checkbox"></span>
             <span class="todo--tasks-list--item--description">${itemsList[i].task}</span>
+            <div class="delete-task"><img src="./images/remove.png" alt="" width="16px" height="16px"/>
+            <span class="delete-text">Delete</span>
+            </div>
         </li>`);
     });
     itemsList.reverse(); // Back to normal FIXME
 
     // Checkboxes
-    const checkBox = Array.from(document.querySelectorAll('.todo--tasks-list--item--checkbox'));
+    const checkBox = document.querySelectorAll('.todo--tasks-list--item--checkbox');
     checkCheckBox(checkBox);
+
+    // Delete buttons
+    updateDeleteButtons();
 };
 
 const lineThroughText = (i) => {
@@ -50,6 +72,10 @@ const lineThroughText = (i) => {
 
 const checkCheckBox = checkBox => {
     checkBox.forEach((element, i) => {
+        if (itemsList[i].completed) {
+            element.classList.toggle('todo--tasks-list--item--checkbox--checked');
+            lineThroughText(i);
+        }
         element.addEventListener('click', function () {
             element.classList.toggle('todo--tasks-list--item--checkbox--checked');
             itemsList[i].completed = !itemsList[i].completed;
@@ -91,9 +117,12 @@ add.addEventListener('click', function () {
         newTask.dueDate = '10/10/2021'; // TODO get actual dueDate
         newTask.completed = false;
         itemsList.unshift(newTask);
+
         displayTasks();
+
         modal.style.display = "none";
         document.getElementById('input-task').value = '';
+
     } else {
         document.getElementById('input-task').style.border = '1px solid red'; // Fade this down TODO FIXME
         document.getElementById('input-task').focus();

@@ -171,6 +171,46 @@ div [id^='sheet-'] {
     padding-top: 15px;
 }
 
+li:hover > .delete-task {
+    display: block;
+    width: 22px;
+}
+
+.delete-task {
+    float: right;
+    width: 0;
+    height: 45px;
+    background-color: #e14949;
+    margin-top: -15px;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+li:hover > .delete-task:hover {
+    width: 80px;
+}
+
+.delete-task:hover > .delete-text {
+    width: auto;
+}
+
+.delete-task img {
+    margin: 14.5px auto auto 3px;
+    filter: invert(8%) sepia(91%) saturate(4481%) hue-rotate(356deg)
+        brightness(93%) contrast(84%);
+    float: left;
+}
+
+.delete-task .delete-text {
+    color: #841a1a;
+    margin: 14.5px auto auto 25px;
+    width: 0;
+    transition: all 0.5s;
+    display: block;
+    font-size: 1rem;
+}
+
 /* SECTION Add task */
 
 #todo--footer #add-task {
