@@ -109,7 +109,7 @@ div [id^='sheet-'] {
 
 /* SECTION ToDo header */
 
-#todo--header header {
+#todo--header--today {
     padding-top: 1.75rem;
     font-size: 2.25rem;
     font-weight: 700;
@@ -117,7 +117,7 @@ div [id^='sheet-'] {
     color: #f3904f;
 }
 
-#todo--header p {
+#todo--header--date {
     font-size: 0.875rem;
     text-align: center;
     color: #f3904f;
@@ -175,6 +175,9 @@ li:hover > .delete-task {
     display: block;
     width: 22px;
 }
+li:hover > .delete-task img {
+    display: block;
+}
 
 .delete-task {
     float: right;
@@ -193,6 +196,7 @@ li:hover > .delete-task:hover {
 
 .delete-task:hover > .delete-text {
     width: auto;
+    display: block;
 }
 
 .delete-task img {
@@ -200,6 +204,7 @@ li:hover > .delete-task:hover {
     filter: invert(8%) sepia(91%) saturate(4481%) hue-rotate(356deg)
         brightness(93%) contrast(84%);
     float: left;
+    display: none;
 }
 
 .delete-task .delete-text {
@@ -207,8 +212,8 @@ li:hover > .delete-task:hover {
     margin: 14.5px auto auto 25px;
     width: 0;
     transition: all 0.5s;
-    display: block;
     font-size: 1rem;
+    display: none;
 }
 
 /* SECTION Add task */
@@ -234,7 +239,7 @@ li:hover > .delete-task:hover {
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Enable scroll if needed */
+    overflow-y: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4);
 }

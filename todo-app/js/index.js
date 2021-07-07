@@ -86,6 +86,22 @@ const checkCheckBox = checkBox => {
 
 displayTasks();
 
+// SECTION Header date
+
+const locale = navigator.language;
+const dateOptionsDay = {
+    weekday: 'long',
+}
+const dateOptionsDate = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+}
+const day = new Intl.DateTimeFormat(locale, dateOptionsDay).format(new Date());
+const date = new Intl.DateTimeFormat(locale, dateOptionsDate).format(new Date());
+document.querySelector('#todo--header--today').textContent = day;
+document.querySelector('#todo--header--date').textContent = date;
+
 // SECTION Add new task
 
 const addTaskButton = document.querySelector('#add-task');
