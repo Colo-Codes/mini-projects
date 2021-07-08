@@ -188,6 +188,8 @@ li:hover > .delete-task img {
     border-radius: 10px 0 0 10px;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+    z-index: 10;
 }
 
 li:hover > .delete-task:hover {
@@ -214,6 +216,16 @@ li:hover > .delete-task:hover {
     transition: all 0.5s;
     font-size: 1rem;
     display: none;
+}
+
+.todo--tasks-list--item--due-date {
+    font-size: 0.7rem;
+    display: inline-block;
+    margin-left: 1rem;
+    color: #fff;
+    background-color: tomato;
+    width: fit-content;
+    border-radius: 5px;
 }
 
 /* SECTION Add task */
@@ -286,6 +298,36 @@ li:hover > .delete-task:hover {
     cursor: pointer;
 }
 
+.due-date--container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 93%;
+}
+
+#due-date {
+    font-size: 0.8rem;
+    margin: 0 1rem;
+    justify-self: end;
+}
+
+.due-date--input {
+    border-radius: 10px;
+    border: 1px solid #c9c9c9;
+    padding: 5px 2px 5px 5px;
+    height: 2rem;
+    width: 3rem;
+}
+
+#due-date--year {
+    width: 4rem;
+}
+
+.due-date-bubble {
+    position: relative;
+    z-index: 5;
+}
+
 /* Add task button */
 #btn-add-task {
     background-color: #f3904f;
@@ -297,6 +339,8 @@ li:hover > .delete-task:hover {
     color: #a44d13;
     transition: all 0.5s;
     width: 100px;
+    height: 35px;
+    float: left;
 }
 
 #btn-add-task:hover {

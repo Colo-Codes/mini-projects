@@ -50,6 +50,7 @@ const displayTasks = () => {
         list.insertAdjacentHTML('afterbegin', `<li class="todo--tasks-list--item">
             <span class="todo--tasks-list--item--checkbox"></span>
             <span class="todo--tasks-list--item--description">${itemsList[i].task}</span>
+            <div class="todo--tasks-list--item--due-date">${itemsList[i].hasOwnProperty('dueDate') ? `<div class="due-date-bubble" style="padding: 2px;">${itemsList[i].dueDate}</div>` : ''}</div>
             <div class="delete-task"><img src="./images/remove.png" alt="" width="16px" height="16px"/>
             <span class="delete-text">Delete</span>
             </div>
@@ -130,7 +131,12 @@ add.addEventListener('click', function () {
     const newTask = {};
     if (document.getElementById('input-task').value !== '') {
         newTask.task = document.getElementById('input-task').value;
-        newTask.dueDate = '10/10/2021'; // TODO get actual dueDate
+        const dueDateDay = document.getElementById('due-date--day').value.padStart(2, '0');
+        const dueDateMonth = document.getElementById('due-date--month').value.padStart(2, '0');
+        const dueDateYear = document.getElementById('due-date--year').value;
+        if (dueDateDay !== '00' && dueDateMonth !== '00') {
+            newTask.dueDate = `${dueDateDay}/${dueDateMonth}/${dueDateYear}`;
+        }
         newTask.completed = false;
         itemsList.unshift(newTask);
 
@@ -138,6 +144,9 @@ add.addEventListener('click', function () {
 
         modal.style.display = "none";
         document.getElementById('input-task').value = '';
+        document.getElementById('due-date--day').value = '';
+        document.getElementById('due-date--month').value = '';
+        document.getElementById('due-date--year').value = '';
 
     } else {
         document.getElementById('input-task').style.border = '1px solid red'; // Fade this down TODO FIXME
