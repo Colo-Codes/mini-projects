@@ -85,6 +85,30 @@ const checkCheckBox = checkBox => {
     });
 }
 
+const addNewTask = function () {
+    const newTask = {};
+    if (document.getElementById('input-task').value !== '') {
+        newTask.task = document.getElementById('input-task').value;
+        const dueDate = document.getElementById('due-date--input').value;
+        if (dueDate !== '') {
+            const dueDateArr = dueDate.split('-');
+            newTask.dueDate = `${dueDateArr[2]}/${dueDateArr[1]}/${dueDateArr[0]}`;
+        }
+        newTask.completed = false;
+        itemsList.unshift(newTask);
+
+        displayTasks();
+
+        modal.style.display = "none";
+        document.getElementById('input-task').value = '';
+
+    } else {
+        document.getElementById('input-task').style.border = '1px solid red';
+        document.getElementById('input-task').focus();
+        setTimeout(() => document.getElementById('input-task').style.border = '1px solid #c9c9c9', 500);
+    }
+};
+
 displayTasks();
 
 // SECTION Header date
@@ -105,51 +129,44 @@ document.querySelector('#todo--header--date').textContent = date;
 
 // SECTION Add new task
 
-const addTaskButton = document.querySelector('#add-task');
+const addTaskBtn = document.querySelector('#add-task');
 const modal = document.getElementById("myModal");
 const span = document.getElementsByClassName("close")[0];
-const add = document.getElementById('btn-add-task');
+const addBtn = document.getElementById('btn-add-task');
+const addInput = document.getElementById('input-task');
+const currentDate = document.getElementById('due-date--input');
+// const today = new Date();
 
-addTaskButton.onclick = function () {
+// 'Today' as default on date picker
+// currentDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+addTaskBtn.onclick = function () {
     modal.style.display = "block";
     document.getElementById('input-task').focus();
-
 }
+
+// When user presses Esc key, exit modal
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape')
+        modal.style.display = "none";
+});
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+span.addEventListener('click', function () {
     modal.style.display = "none";
-}
+});
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
+window.addEventListener('click', function (event) {
     if (event.target === modal)
         modal.style.display = "none";
-}
+});
 
-add.addEventListener('click', function () {
-    const newTask = {};
-    if (document.getElementById('input-task').value !== '') {
-        newTask.task = document.getElementById('input-task').value;
-        const dueDateDay = document.getElementById('due-date--day').value.padStart(2, '0');
-        const dueDateMonth = document.getElementById('due-date--month').value.padStart(2, '0');
-        const dueDateYear = document.getElementById('due-date--year').value;
-        if (dueDateDay !== '00' && dueDateMonth !== '00') {
-            newTask.dueDate = `${dueDateDay}/${dueDateMonth}/${dueDateYear}`;
-        }
-        newTask.completed = false;
-        itemsList.unshift(newTask);
+addInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter')
+        addNewTask();
+});
 
-        displayTasks();
-
-        modal.style.display = "none";
-        document.getElementById('input-task').value = '';
-        document.getElementById('due-date--day').value = '';
-        document.getElementById('due-date--month').value = '';
-        document.getElementById('due-date--year').value = '';
-
-    } else {
-        document.getElementById('input-task').style.border = '1px solid red'; // Fade this down TODO FIXME
-        document.getElementById('input-task').focus();
-    }
+addBtn.addEventListener('click', function () {
+    addNewTask();
 });

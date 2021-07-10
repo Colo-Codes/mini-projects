@@ -33,14 +33,14 @@ body {
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100vh;
+    height: 90vh;
 }
 
 /* SECTION ToDo container */
 
 #todo--header {
     margin: auto;
-    margin-top: 20vh;
+    margin-top: 10vh;
     width: 350px;
     height: 100px;
     background-color: white;
@@ -130,16 +130,13 @@ div [id^='sheet-'] {
 
 .todo--tasks-list--item {
     display: flex;
-    height: 3rem;
+    height: 3.5rem;
     align-items: center;
     font-size: 1rem;
     color: #6d6d6d;
     border-bottom: 1px dashed #c9c9c9;
     list-style: none;
     position: relative; /* needed for positioning delete button */
-    /* height: 46px; */
-    /* margin: auto 0; */
-    /* padding-top: 15px; */
 }
 
 /* Checkboxes */
@@ -166,7 +163,15 @@ div [id^='sheet-'] {
 
 .todo--tasks-list--item--description {
     flex: 0 0 50%; /* preserve width */
+    padding-top: 1.25rem;
     overflow: hidden; /* prevent overflow */
+    height: 100%;
+}
+
+.todo--tasks-list--item--description--checked {
+    color: #6d6d6d;
+    opacity: 50%;
+    text-decoration: line-through;
 }
 
 /* Due dates */
@@ -186,7 +191,7 @@ div [id^='sheet-'] {
     display: flex;
     align-items: center;
     position: absolute;
-    height: 3rem;
+    height: 3.5rem;
     right: -6rem; /* hide the button */
     /* width: 0; */
     background-color: #e14949;
@@ -333,7 +338,15 @@ li:hover > .delete-task:hover {
     filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
         brightness(103%) contrast(91%);
     position: relative;
+    transition: all 0.2s;
     z-index: 10;
+}
+
+#todo--footer #add-task:hover {
+    filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
+        brightness(103%) contrast(91%)
+        drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.25));
+    transform: translateY(-2px);
 }
 
 /* The Modal (background) */
@@ -369,6 +382,7 @@ li:hover > .delete-task:hover {
     height: 2rem;
     display: block;
     width: 93%;
+    transition: all 0.5s;
 }
 
 #input-task:active,
@@ -393,6 +407,8 @@ li:hover > .delete-task:hover {
     cursor: pointer;
 }
 
+/* Due date */
+
 .due-date--container {
     display: flex;
     justify-content: space-between;
@@ -400,38 +416,35 @@ li:hover > .delete-task:hover {
     width: 93%;
 }
 
-/* Due date */
-
 #due-date {
     font-size: 0.8rem;
     margin: 0 1rem;
     justify-self: end;
 }
 
-.due-date--input {
+#due-date--input {
     border-radius: 10px;
     border: 1px solid #c9c9c9;
     padding: 5px 2px 5px 5px;
-    height: 2rem;
-    width: 3rem;
 }
 
-#due-date--year {
+/* #due-date--year {
     width: 4rem;
-}
+} */
 
 /* Add task button */
+
 #btn-add-task {
     background-color: #f3904f;
+    color: #a44d13;
+    width: 100px;
+    height: 35px;
     margin-top: 10px;
     border-radius: 10px;
     padding: 5px 10px;
     border: 2px solid #ffb482;
     font-size: 1rem;
-    color: #a44d13;
     transition: all 0.5s;
-    width: 100px;
-    height: 35px;
     float: left;
 }
 
