@@ -48,13 +48,13 @@ const displayTasks = () => {
     // Display list
     itemsList.reverse().forEach((element, i) => {
         list.insertAdjacentHTML('afterbegin', `<li class="todo--tasks-list--item">
-            <span class="todo--tasks-list--item--checkbox"></span>
-            <span class="todo--tasks-list--item--description">${itemsList[i].task}</span>
+            <div class="todo--tasks-list--item--checkbox"></div>
+            <div class="todo--tasks-list--item--description">${itemsList[i].task}</div>
             <div class="todo--tasks-list--item--due-date">${itemsList[i].hasOwnProperty('dueDate') ? `<div class="due-date-bubble" style="padding: 2px;">${itemsList[i].dueDate}</div>` : ''}</div>
             <div class="delete-task"><img src="./images/remove.png" alt="" width="16px" height="16px"/>
-            <span class="delete-text">Delete</span>
+                <div class="delete-text">Delete</div>
             </div>
-        </li>`);
+        </li>`); // TODO todo--tasks-list--item--description should have a maximum char count to display and not overflow
     });
     itemsList.reverse(); // Back to normal FIXME
 

@@ -54,7 +54,8 @@ body {
     height: 400px;
     background-color: white;
     box-shadow: 0px 30px 12px rgba(0, 0, 0, 0.15);
-    overflow: auto;
+    overflow-x: hidden; /* hide delete buttons */
+    overflow-y: auto;
 }
 
 /* ToDo shapes and shadows */
@@ -125,7 +126,101 @@ div [id^='sheet-'] {
 
 /* SECTION ToDo list of tasks */
 
+/* Items */
+
 .todo--tasks-list--item {
+    display: flex;
+    height: 3rem;
+    align-items: center;
+    font-size: 1rem;
+    color: #6d6d6d;
+    border-bottom: 1px dashed #c9c9c9;
+    list-style: none;
+    position: relative; /* needed for positioning delete button */
+    /* height: 46px; */
+    /* margin: auto 0; */
+    /* padding-top: 15px; */
+}
+
+/* Checkboxes */
+
+.todo--tasks-list--item--checkbox {
+    flex: 0 0 22px; /* preserve width */
+    height: 22px;
+    background-color: #f5f5f5;
+    border: 1px solid #d5d5d5;
+    border-radius: 50%;
+    margin: auto 15px;
+    cursor: pointer;
+}
+
+.todo--tasks-list--item--checkbox--checked {
+    border: 1px solid black;
+    background: url('../images/check.png') no-repeat center;
+    background-size: 22px 22px;
+    filter: invert(83%) sepia(32%) saturate(6122%) hue-rotate(326deg)
+        brightness(103%) contrast(91%);
+}
+
+/* Item description */
+
+.todo--tasks-list--item--description {
+    flex: 0 0 50%; /* preserve width */
+    overflow: hidden; /* prevent overflow */
+}
+
+/* Due dates */
+
+.todo--tasks-list--item--due-date {
+    font-size: 0.7rem;
+    margin-left: 1rem;
+    color: #fff;
+    background-color: darkgray;
+    width: fit-content;
+    border-radius: 5px;
+}
+
+/* Delete buttons */
+
+.delete-task {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    height: 3rem;
+    right: -6rem; /* hide the button */
+    /* width: 0; */
+    background-color: #e14949;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.delete-task img {
+    margin: auto 5px;
+    filter: invert(8%) sepia(91%) saturate(4481%) hue-rotate(356deg)
+        brightness(93%) contrast(84%);
+}
+
+.delete-task .delete-text {
+    color: #841a1a;
+    padding-right: 0.5rem;
+    font-size: 1rem;
+}
+
+li:hover > .delete-task {
+    right: -3.8rem; /* show 'x' delete button */
+}
+
+li:hover > .delete-task:hover {
+    /* Increase specificity */
+    right: 0; /* show full delete button */
+}
+
+/* li:hover > .delete-task img {
+    display: block;
+} */
+
+/* .todo--tasks-list--item {
     font-size: 1rem;
     color: #6d6d6d;
     height: 46px;
@@ -226,9 +321,9 @@ li:hover > .delete-task:hover {
     background-color: tomato;
     width: fit-content;
     border-radius: 5px;
-}
+} */
 
-/* SECTION Add task */
+/* SECTION Add task modal */
 
 #todo--footer #add-task {
     cursor: pointer;
@@ -305,6 +400,8 @@ li:hover > .delete-task:hover {
     width: 93%;
 }
 
+/* Due date */
+
 #due-date {
     font-size: 0.8rem;
     margin: 0 1rem;
@@ -321,11 +418,6 @@ li:hover > .delete-task:hover {
 
 #due-date--year {
     width: 4rem;
-}
-
-.due-date-bubble {
-    position: relative;
-    z-index: 5;
 }
 
 /* Add task button */
