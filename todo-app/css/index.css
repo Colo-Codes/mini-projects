@@ -263,7 +263,7 @@ li:hover > .delete-task:hover {
     margin: auto;
     padding: 1rem;
     border: 1px solid #888;
-    width: 420px;
+    width: 350px;
     border-radius: 10px;
     box-shadow: 5px 15px 10px rgba(0, 0, 0, 0.3);
 }
@@ -360,5 +360,9 @@ li:hover > .delete-task:hover {
 
     li:hover > .delete-task {
         right: -3.8rem; /* show 'x' delete button on big screens */
+    }
+
+    .modal-content {
+        width: 420px;
     }
 }
