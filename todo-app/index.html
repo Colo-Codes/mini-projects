@@ -7,86 +7,105 @@
         <link rel="stylesheet" href="./css/index.css" />
         <title>Mini-Project - ToDo app</title>
     </head>
-    <body>
-        <div class="changing-background">
-            <main class="todo">
-                <section id="todo--header">
-                    <header>
-                        <h1 id="todo--header--today">Saturday</h1>
-                        <p id="todo--header--date">3 June, 2021</p>
-                    </header>
-                </section>
-                <section id="todo--tasks-list">
-                    <ul id="todo--tasks-list--items-list">
-                        <li class="todo--tasks-list--item">
-                            <div class="todo--tasks-list--item--checkbox"></div>
-                            <div class="todo--tasks-list--item--description">
-                                Item 1
+    <body class="background">
+        <div id="time-of-day">
+            <div class="time-of-day--option">
+                <input
+                    type="radio"
+                    id="morning"
+                    name="time-of-day--background"
+                    value="morning"
+                    checked
+                />
+                <label for="morning">Morning</label>
+            </div>
+            <div class="time-of-day--option">
+                <input
+                    type="radio"
+                    id="afternoon"
+                    name="time-of-day--background"
+                    value="afternoon"
+                />
+                <label for="afternoon">Afternoon</label>
+            </div>
+            <div class="time-of-day--option">
+                <input
+                    type="radio"
+                    id="night"
+                    name="time-of-day--background"
+                    value="night"
+                />
+                <label for="night">Night</label>
+            </div>
+        </div>
+        <main class="todo">
+            <section id="todo--header">
+                <header>
+                    <h1 id="todo--header--today">Saturday</h1>
+                    <p id="todo--header--date">3 June, 2021</p>
+                </header>
+            </section>
+            <section id="todo--tasks-list">
+                <ul id="todo--tasks-list--items-list">
+                    <li class="todo--tasks-list--item">
+                        <div class="todo--tasks-list--item--checkbox"></div>
+                        <div class="todo--tasks-list--item--description">
+                            Item 1
+                        </div>
+                        <div class="todo--tasks-list--item--due-date">
+                            <div class="due-date-bubble" style="padding: 2px">
+                                11/11/2021
                             </div>
-                            <div class="todo--tasks-list--item--due-date">
-                                <div
-                                    class="due-date-bubble"
-                                    style="padding: 2px"
-                                >
-                                    11/11/2021
-                                </div>
+                        </div>
+                        <div class="delete-task">
+                            <img
+                                src="./images/remove.png"
+                                alt=""
+                                width="16px"
+                                height="16px"
+                            /><span class="delete-text">Delete</span>
+                        </div>
+                    </li>
+                    <li class="todo--tasks-list--item">
+                        <div class="todo--tasks-list--item--checkbox"></div>
+                        <div class="todo--tasks-list--item--description">
+                            Item 2
+                        </div>
+                        <div class="todo--tasks-list--item--due-date">
+                            <div class="due-date-bubble" style="padding: 2px">
+                                11/11/2021
                             </div>
-                            <div class="delete-task">
-                                <img
-                                    src="./images/remove.png"
-                                    alt=""
-                                    width="16px"
-                                    height="16px"
-                                /><span class="delete-text">Delete</span>
+                        </div>
+                        <div class="delete-task">
+                            <img
+                                src="./images/remove.png"
+                                alt=""
+                                width="16px"
+                                height="16px"
+                            /><span class="delete-text">Delete</span>
+                        </div>
+                    </li>
+                    <li class="todo--tasks-list--item">
+                        <div class="todo--tasks-list--item--checkbox"></div>
+                        <div class="todo--tasks-list--item--description">
+                            Item 3
+                        </div>
+                        <div class="todo--tasks-list--item--due-date">
+                            <div class="due-date-bubble" style="padding: 2px">
+                                11/11/2021
                             </div>
-                        </li>
-                        <li class="todo--tasks-list--item">
-                            <div class="todo--tasks-list--item--checkbox"></div>
-                            <div class="todo--tasks-list--item--description">
-                                Item 2
-                            </div>
-                            <div class="todo--tasks-list--item--due-date">
-                                <div
-                                    class="due-date-bubble"
-                                    style="padding: 2px"
-                                >
-                                    11/11/2021
-                                </div>
-                            </div>
-                            <div class="delete-task">
-                                <img
-                                    src="./images/remove.png"
-                                    alt=""
-                                    width="16px"
-                                    height="16px"
-                                /><span class="delete-text">Delete</span>
-                            </div>
-                        </li>
-                        <li class="todo--tasks-list--item">
-                            <div class="todo--tasks-list--item--checkbox"></div>
-                            <div class="todo--tasks-list--item--description">
-                                Item 3
-                            </div>
-                            <div class="todo--tasks-list--item--due-date">
-                                <div
-                                    class="due-date-bubble"
-                                    style="padding: 2px"
-                                >
-                                    11/11/2021
-                                </div>
-                            </div>
-                            <div class="delete-task">
-                                <img
-                                    src="./images/remove.png"
-                                    alt=""
-                                    width="16px"
-                                    height="16px"
-                                /><span class="delete-text">Delete</span>
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-            </main>
+                        </div>
+                        <div class="delete-task">
+                            <img
+                                src="./images/remove.png"
+                                alt=""
+                                width="16px"
+                                height="16px"
+                            /><span class="delete-text">Delete</span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
             <div id="sheet-1-3d">
                 <section id="todo--footer">
                     <div id="add-task">
@@ -102,21 +121,22 @@
             <div id="sheet-2-3d"></div>
             <div id="sheet-3-3d"></div>
             <div id="sheet-4-3d"></div>
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <input
-                        id="input-task"
-                        type="text"
-                        placeholder="Your new task here"
-                    />
-                    <div class="due-date--container">
-                        <button id="btn-add-task">Add</button>
-                        <p id="due-date">Due date:</p>
-                        <input type="date" id="due-date--input" />
-                    </div>
+        </main>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <input
+                    id="input-task"
+                    type="text"
+                    placeholder="Your new task here"
+                />
+                <div class="due-date--container">
+                    <button id="btn-add-task">Add</button>
+                    <p id="due-date">Due date:</p>
+                    <input type="date" id="due-date--input" />
                 </div>
             </div>
         </div>

@@ -20,6 +20,11 @@ html {
 
 body {
     font-family: 'Comfortaa', cursive;
+    height: 100vh;
+}
+
+.background,
+.background-morning {
     background: #f3904f; /* fallback for old browsers */
     background: -webkit-linear-gradient(
         to bottom,
@@ -33,14 +38,53 @@ body {
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background-repeat: no-repeat;
     background-size: cover;
-    height: 98vh;
+}
+
+.background-afternoon {
+    background: #1a2a6c; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to bottom,
+        #fdbb2d,
+        #b21f1f,
+        #1a2a6c
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        #fdbb2d,
+        #b21f1f,
+        #1a2a6c
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.background-night {
+    background: #c33764; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to bottom,
+        #1d2671,
+        #c33764
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        #1d2671,
+        #c33764
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 /* SECTION ToDo container */
 
+.todo {
+    position: relative;
+    top: 1vh;
+}
+
 #todo--header {
     margin: auto;
-    margin-top: 2vh;
     width: 350px;
     height: 100px;
     background-color: white;
@@ -60,7 +104,7 @@ body {
 
 /* ToDo shapes and shadows */
 
-div [id^='sheet-'] {
+[id^='sheet-'] {
     margin: auto;
     border-radius: 0 0 10px 10px;
     -webkit-filter: drop-shadow(0px 30px 12px rgba(0, 0, 0, 0.15));
@@ -347,15 +391,25 @@ li:hover > .delete-task:hover {
     cursor: pointer;
 }
 
+/* SECTION Background switcher */
+
+#time-of-day {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.25);
+    font-size: 0.7rem;
+    width: 15rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    margin: 1rem auto 0;
+}
+
 /* SECTION Mobile first */
 
 @media (min-width: 600px) {
-    body {
-        height: 90vh;
-    }
-
-    #todo--header {
-        margin-top: 20vh;
+    .todo {
+        position: relative;
+        top: 10vh;
     }
 
     li:hover > .delete-task {

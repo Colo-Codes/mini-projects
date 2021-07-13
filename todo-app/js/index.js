@@ -1,3 +1,5 @@
+// By Damian Demasi (damian.demasi.1@gmail.com) - July 2021
+
 'use strict';
 
 // SECTION Default tasks items
@@ -21,6 +23,39 @@ const itemsList = [
 ];
 
 // SECTION Function definitions
+
+const setBackground = (method) => {
+    let currentHour = 0; // Default
+
+    if (method === 'automatic') {
+        currentHour = new Date().getHours();
+    } else if (method === 'morning') {
+        currentHour = 7;
+    } else if (method === 'afternoon') {
+        currentHour = 12;
+    } else if (method === 'night') {
+        currentHour = 19;
+    }
+
+    const body = document.querySelector('body');
+    body.className = ""; // Remove all properties
+
+    if (currentHour > 6 && currentHour < 12) {
+        // Morning
+        body.classList.add('background-morning');
+        document.querySelector('#morning').checked = true;
+    } else if (currentHour >= 12 && currentHour < 19) {
+        // Afternoon
+        body.classList.add('background-afternoon');
+        document.querySelector('#afternoon').checked = true;
+    } else {
+        // Night
+        if (method !== 'manual') {
+            body.classList.add('background-night');
+            document.querySelector('#night').checked = true;
+        }
+    }
+}
 
 const updateDeleteButtons = () => {
     const deleteButtons = document.querySelectorAll('.delete-task');
@@ -46,7 +81,7 @@ const displayTasks = () => {
         element.remove();
     })
     // Display list
-    itemsList.reverse().forEach((element, i) => {
+    itemsList.reverse().forEach((_, i) => {
         list.insertAdjacentHTML('afterbegin', `<li class="todo--tasks-list--item">
             <div class="todo--tasks-list--item--checkbox"></div>
             <div class="todo--tasks-list--item--description">${itemsList[i].task}</div>
@@ -109,6 +144,9 @@ const addNewTask = function () {
     }
 };
 
+// SECTION Initialisation
+
+setBackground('automatic');
 displayTasks();
 
 // SECTION Header date
@@ -169,4 +207,18 @@ addInput.addEventListener('keydown', function (event) {
 
 addBtn.addEventListener('click', function () {
     addNewTask();
+});
+
+// SECTION Background on demand
+
+// Event delegation (to prevent repeating the listener function for each element)
+document.querySelector('#time-of-day').addEventListener('click', function (e) {
+    // e.preventDefault();
+    console.log(e);
+
+    // Matching strategy
+    if (e.target.value !== undefined) {
+        console.log(e.target.value);
+        setBackground(e.target.value);
+    }
 });
