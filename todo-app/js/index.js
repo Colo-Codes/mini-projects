@@ -2,6 +2,16 @@
 
 'use strict';
 
+// SECTION Global variables
+
+const addTaskBtn = document.querySelector('#add-task');
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+const addBtn = document.getElementById('btn-add-task');
+const addInput = document.getElementById('input-task');
+const currentDate = document.getElementById('due-date--input');
+// const today = new Date();
+
 // SECTION Default tasks items
 
 const itemsList = [
@@ -43,26 +53,25 @@ const setBackground = (method) => {
     if (currentHour > 6 && currentHour < 12) {
         // Morning
         background.classList.add('background-morning');
-        background.classList.add('background-stretch');
         document.querySelector('#morning').checked = true;
     } else if (currentHour >= 12 && currentHour < 19) {
         // Afternoon
         background.classList.add('background-afternoon');
-        background.classList.add('background-stretch');
         document.querySelector('#afternoon').checked = true;
     } else {
         // Night
         if (method !== 'manual') {
             background.classList.add('background-night');
-            background.classList.add('background-stretch');
             document.querySelector('#night').checked = true;
         }
     }
+    background.classList.add('background-stretch');
+
 }
 
 const updateDeleteButtons = () => {
     const deleteButtons = document.querySelectorAll('.delete-task');
-    deleteButtons.forEach((button, i) => {
+    deleteButtons.forEach((button) => {
         button.removeEventListener('click', () => { });
     });
     deleteButtons.forEach((button, i) => {
@@ -92,9 +101,9 @@ const displayTasks = () => {
             <div class="delete-task"><img src="./images/remove.png" alt="" width="16px" height="16px"/>
                 <div class="delete-text">Delete</div>
             </div>
-        </li>`); // TODO todo--tasks-list--item--description should have a maximum char count to display and not overflow
+        </li>`);
     });
-    itemsList.reverse(); // Back to normal FIXME
+    itemsList.reverse();
 
     // Checkboxes
     const checkBox = document.querySelectorAll('.todo--tasks-list--item--checkbox');
@@ -125,8 +134,10 @@ const checkCheckBox = checkBox => {
 
 const addNewTask = function () {
     const newTask = {};
-    if (document.getElementById('input-task').value !== '') {
-        newTask.task = document.getElementById('input-task').value;
+    const inputTask = document.getElementById('input-task');
+
+    if (inputTask.value !== '') {
+        newTask.task = inputTask.value;
         const dueDate = document.getElementById('due-date--input').value;
         if (dueDate !== '') {
             const dueDateArr = dueDate.split('-');
@@ -138,53 +149,52 @@ const addNewTask = function () {
         displayTasks();
 
         modal.style.display = "none";
-        document.getElementById('input-task').value = '';
+        inputTask.value = '';
 
     } else {
-        document.getElementById('input-task').style.border = '1px solid red';
-        document.getElementById('input-task').focus();
-        setTimeout(() => document.getElementById('input-task').style.border = '1px solid #c9c9c9', 500);
+
+        inputTask.style.border = '1px solid red';
+        inputTask.focus();
+        setTimeout(() => inputTask.style.border = '1px solid #c9c9c9', 500);
     }
 };
 
+const setHeaderDate = function () {
+    const locale = navigator.language;
+
+    const dateOptionsDay = {
+        weekday: 'long',
+    }
+    const dateOptionsDate = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    }
+    const day = new Intl.DateTimeFormat(locale, dateOptionsDay).format(new Date());
+    const date = new Intl.DateTimeFormat(locale, dateOptionsDate).format(new Date());
+    document.querySelector('#todo--header--today').textContent = day;
+    document.querySelector('#todo--header--date').textContent = date;
+}
+
+const init = function () {
+    setBackground('automatic');
+    displayTasks();
+    setHeaderDate();
+}
+
 // SECTION Initialisation
 
-setBackground('automatic');
-displayTasks();
-
-// SECTION Header date
-
-const locale = navigator.language;
-const dateOptionsDay = {
-    weekday: 'long',
-}
-const dateOptionsDate = {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-}
-const day = new Intl.DateTimeFormat(locale, dateOptionsDay).format(new Date());
-const date = new Intl.DateTimeFormat(locale, dateOptionsDate).format(new Date());
-document.querySelector('#todo--header--today').textContent = day;
-document.querySelector('#todo--header--date').textContent = date;
+init();
 
 // SECTION Add new task
-
-const addTaskBtn = document.querySelector('#add-task');
-const modal = document.getElementById("myModal");
-const span = document.getElementsByClassName("close")[0];
-const addBtn = document.getElementById('btn-add-task');
-const addInput = document.getElementById('input-task');
-const currentDate = document.getElementById('due-date--input');
-// const today = new Date();
 
 // 'Today' as default on date picker
 // currentDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-addTaskBtn.onclick = function () {
+addTaskBtn.addEventListener('click', function () {
     modal.style.display = "block";
     document.getElementById('input-task').focus();
-}
+});
 
 // When user presses Esc key, exit modal
 document.addEventListener('keydown', function (event) {
