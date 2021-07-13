@@ -37,21 +37,24 @@ const setBackground = (method) => {
         currentHour = 19;
     }
 
-    const body = document.querySelector('body');
-    body.className = ""; // Remove all properties
+    const background = document.querySelector('.background');
+    background.className = ""; // Remove all properties
 
     if (currentHour > 6 && currentHour < 12) {
         // Morning
-        body.classList.add('background-morning');
+        background.classList.add('background-morning');
+        background.classList.add('background-stretch');
         document.querySelector('#morning').checked = true;
     } else if (currentHour >= 12 && currentHour < 19) {
         // Afternoon
-        body.classList.add('background-afternoon');
+        background.classList.add('background-afternoon');
+        background.classList.add('background-stretch');
         document.querySelector('#afternoon').checked = true;
     } else {
         // Night
         if (method !== 'manual') {
-            body.classList.add('background-night');
+            background.classList.add('background-night');
+            background.classList.add('background-stretch');
             document.querySelector('#night').checked = true;
         }
     }

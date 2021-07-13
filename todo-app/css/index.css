@@ -18,9 +18,12 @@ html {
 
 /* SECTION Background */
 
-body {
+body,
+.background-stretch {
     font-family: 'Comfortaa', cursive;
-    height: 100vh;
+    min-height: 100vh;
+    /* background-repeat: no-repeat;
+    background-size: cover; */
 }
 
 .background,
@@ -36,8 +39,6 @@ body {
         #3b4371,
         #f3904f
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .background-afternoon {
@@ -54,9 +55,6 @@ body {
         #b21f1f,
         #1a2a6c
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .background-night {
@@ -71,9 +69,6 @@ body {
         #1d2671,
         #c33764
     ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 /* SECTION ToDo container */
@@ -404,23 +399,6 @@ li:hover > .delete-task:hover {
     margin: 1rem auto 0;
 }
 
-/* SECTION Mobile first */
-
-@media (min-width: 600px) {
-    .todo {
-        position: relative;
-        top: 10vh;
-    }
-
-    li:hover > .delete-task {
-        right: -3.8rem; /* show 'x' delete button on big screens */
-    }
-
-    .modal-content {
-        width: 420px;
-    }
-}
-
 /* SECTION Footer */
 
 footer {
@@ -428,7 +406,7 @@ footer {
     color: white;
     font-size: 0.8rem;
     text-align: center;
-    width: 25rem;
+    width: 15rem;
     margin: 5rem auto;
     border-radius: 10px;
     padding: 0.5rem 0;
@@ -448,4 +426,25 @@ footer a:visited {
     color: whitesmoke;
     background-color: rgba(0, 0, 0, 0.25);
     text-decoration-style: dotted;
+}
+
+/* SECTION Mobile first */
+
+@media (min-width: 600px) {
+    .todo {
+        position: relative;
+        top: 10vh;
+    }
+
+    li:hover > .delete-task {
+        right: -3.8rem; /* show 'x' delete button on big screens */
+    }
+
+    .modal-content {
+        width: 420px;
+    }
+
+    footer {
+        width: 25rem;
+    }
 }
