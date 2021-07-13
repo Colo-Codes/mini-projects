@@ -37,7 +37,7 @@ const setBackground = (method) => {
         currentHour = 19;
     }
 
-    const background = document.querySelector('.background');
+    const background = document.querySelector('body');
     background.className = ""; // Remove all properties
 
     if (currentHour > 6 && currentHour < 12) {
