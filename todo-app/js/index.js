@@ -141,6 +141,7 @@ class App {
                 element.classList.toggle('todo--tasks-list--item--checkbox--checked');
                 this.itemsList[i].completed = !this.itemsList[i].completed;
                 this._lineThroughText(i);
+                this._setLocalStorage();
             }
 
             if (this.itemsList[i].completed) {
@@ -151,6 +152,7 @@ class App {
         }
 
         checkBox.forEach(processItem.bind(this));
+
     }
 
     _displayTasks() {
@@ -160,6 +162,10 @@ class App {
         li.forEach(element => {
             element.remove();
         })
+
+        // Get items from local storage
+        this._getLocalStorage();
+
         // Display list
         this.itemsList.reverse().forEach((_, i) => {
             list.insertAdjacentHTML('afterbegin', `<li class="todo--tasks-list--item">
@@ -192,6 +198,7 @@ class App {
                 // console.log(Array.from(document.querySelectorAll('li'))[i]);
                 this.itemsList.splice(i, 1);
 
+                this._setLocalStorage();
                 this._displayTasks();
             });
         });
@@ -210,6 +217,8 @@ class App {
             }
             newTask.completed = false;
             this.itemsList.unshift(newTask);
+
+            this._setLocalStorage();
 
             this._displayTasks();
 
@@ -239,6 +248,18 @@ class App {
         const date = new Intl.DateTimeFormat(locale, dateOptionsDate).format(new Date());
         document.querySelector('#todo--header--today').textContent = day;
         document.querySelector('#todo--header--date').textContent = date;
+    }
+
+    _setLocalStorage() {
+        localStorage.setItem('tasks', JSON.stringify(this.itemsList));
+    }
+
+    _getLocalStorage() {
+        const data = JSON.parse(localStorage.getItem('tasks'));
+
+        if (!data) return;
+
+        this.itemsList = data;
     }
 
     _init() {
