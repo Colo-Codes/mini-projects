@@ -416,23 +416,22 @@ footer p:last-child {
     margin-top: 1.5rem;
 }
 
-footer a {
-    color: whitesmoke;
+footer a,
+footer a:visited {
+    color: white;
 }
 
 footer a:hover,
-footer a:active,
-footer a:visited {
-    color: whitesmoke;
-    background-color: rgba(0, 0, 0, 0.25);
+footer a:active {
     text-decoration-style: dotted;
+    color: #ffb482;
 }
 
 footer img {
     transition: all 0.2s;
 }
 
-a:hover img {
+footer a:hover img {
     -webkit-filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.5));
     filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.5));
     -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=5, Color='#444')";
