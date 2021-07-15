@@ -360,10 +360,6 @@ li:hover > .delete-task:hover {
     padding: 5px 2px 5px 5px;
 }
 
-/* #due-date--year {
-    width: 4rem;
-} */
-
 /* Add task button */
 
 #btn-add-task {
@@ -428,7 +424,7 @@ footer a:hover,
 footer a:active,
 footer a:visited {
     color: whitesmoke;
-    /* background-color: rgba(0, 0, 0, 0.25); */
+    background-color: rgba(0, 0, 0, 0.25);
     text-decoration-style: dotted;
 }
 
