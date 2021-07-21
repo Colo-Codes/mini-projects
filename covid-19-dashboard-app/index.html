@@ -6,7 +6,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./css/index.css" />
         <script defer src="./js/index.js"></script>
+        <!-- Leaflet Map API -->
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+            integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+            crossorigin=""
+        />
+        <script
+            src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""
+        ></script>
+        <link
+            href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+            rel="stylesheet"
+        />
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
         <title>COVID-19 Dashboard</title>
     </head>
-    <body></body>
+    <body>
+        <main>
+            <div class="spinner">
+                <div class="lds-ripple">
+                    <div></div>
+                    <div></div>
+                </div>
+                <p class="spinner-legend"></p>
+            </div>
+            <form action="#">
+                <input
+                    type="text"
+                    placeholder="Enter a country name and click search"
+                    id="countryToSearch"
+                />
+                <button type="submit" class="btn-searchCountry">
+                    Search COVID-19 data
+                </button>
+            </form>
+        </main>
+        <div id="mapId"></div>
+        <div id="mapId2"></div>
+    </body>
 </html>
