@@ -130,13 +130,13 @@ const getCountryMap = async function (country) {
 // SECTION Search country
 
 const putCountryOnInput = function (country) {
-    document.querySelector('#countryToSearch').value = country;
+    document.querySelector('#search-bar__input__countryToSearch').value = country;
 }
 
-document.querySelector('.btn-searchCountry').addEventListener('click', function (event) {
+document.querySelector('.search-bar__btn').addEventListener('click', function (event) {
     event.preventDefault();
 
-    const countryToSearch = document.querySelector('#countryToSearch').value;
+    const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
 
     getCovid19Data(countryToSearch);
 

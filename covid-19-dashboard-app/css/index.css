@@ -1,18 +1,171 @@
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700;900&family=Nanum+Myeongjo:wght@400;800&display=swap');
 
-/* font-family: 'Nanum Myeongjo', serif; */
+/*  font-family: 'Montserrat', sans-serif;
+    font-family: 'Nanum Myeongjo', serif; */
 
-/* SECTION body */
-body {
-    background-color: beige;
+/* SECTION Initial reset */
+
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    /*outline: 1px dashed blue; /* Debugging purposes */
 }
 
 /* SECTION Leaflet map API */
 
 #mapId,
 #mapId2 {
-    height: 350px;
-    width: 350px;
+    height: 130px;
+    width: 220px;
+}
+
+/* SECTION Background */
+
+.background {
+    background-color: rgba(38, 70, 83, 0.7);
+    width: 100%;
+    height: 100vh;
+}
+
+/* SECTION Title */
+
+.title-container {
+    padding: 30px 0;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* SECTION Search bar */
+
+.search-bar-container {
+    width: 600px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    margin: 0 auto;
+    border-radius: 20px;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
+}
+.search-bar__logo-container {
+    margin: 7px 5px 3px 5px;
+    filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
+        brightness(95%) contrast(95%);
+}
+.search-bar__btn-container {
+    width: 200px;
+}
+.search-bar__btn {
+    background-color: #2a9d8f;
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    border: 0;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+/* .search-bar__btn:focus, */
+.search-bar__btn:hover {
+    background-color: #264653;
+    cursor: pointer;
+}
+.search-bar__input-container {
+    width: 100%;
+}
+
+#search-bar__input__countryToSearch {
+    width: 100%;
+    height: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    color: #9e9e9e;
+    border: 0;
+    padding-left: 0.5rem;
+}
+#search-bar__input__countryToSearch:focus {
+    outline: none; /* NOTE This might be bad for screen readers */
+}
+
+/* SECTION Country cards */
+
+.countries-container {
+    display: flex;
+    justify-content: center;
+}
+.country-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 19.5rem;
+    margin: 6.25rem;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 5px 20px 3px rgba(0, 0, 0, 0.15);
+    padding-bottom: 1rem;
+}
+.country__flag-container {
+    display: flex;
+    flex-direction: column;
+    width: 17.5rem;
+    height: 10.3125rem;
+    background-color: gray;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+.country__flag__flag {
+    height: 100%;
+}
+.country__flag__title {
+    width: 100%;
+    height: 3rem;
+    background-color: #2a9d8f;
+    border-radius: 0 0 5px 5px;
+}
+.country__infections-container,
+.country__vaccinations-container {
+    display: flex;
+    flex-direction: column;
+}
+.country__infections__title,
+.country__vaccinations__title {
+    width: 100%;
+    height: 3rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+}
+.country__infections__title {
+    background-color: #e76f51;
+}
+.country__vaccinations__title {
+    background-color: #2a9d8f;
+}
+.countries-container ul {
+    list-style-type: none;
+}
+.country__infections__list__item,
+.country__vaccinations__list__item {
+    width: 100%;
+    height: 3rem;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+}
+.country__infections__list__item {
+    background-color: rgba(231, 111, 81, 0.1);
+}
+.country__vaccinations__list__item {
+    background-color: rgba(42, 157, 143, 0.1);
 }
 
 /* SECTION Spinners */
