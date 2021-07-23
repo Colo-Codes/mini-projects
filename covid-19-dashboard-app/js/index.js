@@ -2,6 +2,8 @@
 
 'use strict';
 
+// TODO Prevent the same country from being added twice
+
 // SECTION Global variables
 
 let countries = [];
@@ -109,23 +111,120 @@ const getCountryFlag = async function (countryName) {
     return flag;
 }
 
+// const deleteCountryCard = function (countryCard) {
+//     countryCard.remove();
+// }
+
 const displayCountryCard = async function (countryInfo) {
-    document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
 
-    document.querySelector('.country__flag-container').style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
+    const countryCardHTMLStructure = `
+        <article class="full-country-data-container" data-id="${countryInfo.countryName}">
+            <main class="country-container">
+                <div class="close-card-btn">
+                    <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
+                </div>
+                <div class="country__flag-container">
+                    <div class="country__flag__flag-empty"></div>
+                    <div class="country__flag__title__container">
+                        <div class="country__flag__title">${countryInfo.countryName}</div>
+                    </div>
+                </div>
+                <div class="country__infections-container">
+                    <div class="country__infections__title">
+                        <h3>COVID-19 infections</h3>
+                    </div>
+                    <div class="country__infections__list-container">
+                        <ul>
+                            <li class="country__infections__list__item">
+                                <div class="country__infections__list__item__reference">Confirmed</div>
+                                <div class="country__infections__list__item__value">${countryInfo.infectConfirmed}</div>
+                            </li>
+                            <li class="country__infections__list__item">
+                                <div class="country__infections__list__item__reference">Recovered</div>
+                                <div class="country__infections__list__item__value">${countryInfo.infectRecovered}</div>
+                            </li>
+                            <li class="country__infections__list__item">
+                                <div class="country__infections__list__item__reference">Deaths</div>
+                                <div class="country__infections__list__item__value">${countryInfo.infectDeaths}</div>
+                            </li>
+                            <li class="country__infections__list__item">
+                                <div class="country__infections__list__item__reference">Population</div>
+                                <div class="country__infections__list__item__value">${countryInfo.infectPopulation}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="country__vaccinations-container">
+                    <div class="country__vaccinations__title">
+                        <h3>COVID-19 vaccinations</h3>
+                    </div>
+                    <div class="country__vaccinations__list-container">
+                        <ul>
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Administered</div>
+                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccAdministered}</div>
+                            </li>
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
+                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccPartially}</div>
+                            </li>
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
+                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccFully}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+            <aside class="country__comparison__list-container">
+                <div class="country__comparison__title">
+                    <h3>Comparison with first country</h3>
+                </div>
+                <ul>
+                    <li class="country__comparison__list__item"></li>
+                    <li class="country__comparison__list__item"></li>
+                    <li class="country__comparison__list__item"></li>
+                    <li class="country__comparison__list__item"></li>
+                </ul>
+            </aside>
+        </article>
+    `;
 
-    const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
-    infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
-    infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
-    infectionsListItemsValues[2].textContent = countryInfo.infectDeaths;
-    infectionsListItemsValues[3].textContent = countryInfo.infectPopulation;
-
-    const vaccinationsListItemsValues = document.querySelectorAll('.country__vaccinations__list__item__value')
-    vaccinationsListItemsValues[0].textContent = countryInfo.vaccAdministered;
-    vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
-    vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
+    // document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
 
 
+    // const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
+    // infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
+    // infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
+    // infectionsListItemsValues[2].textContent = countryInfo.infectDeaths;
+    // infectionsListItemsValues[3].textContent = countryInfo.infectPopulation;
+
+    // const vaccinationsListItemsValues = document.querySelectorAll('.country__vaccinations__list__item__value')
+    // vaccinationsListItemsValues[0].textContent = countryInfo.vaccAdministered;
+    // vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
+    // vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
+
+
+    document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
+
+    const flagContainers = document.querySelectorAll('.country__flag-container');
+    flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
+
+
+
+    const closeButtons = document.querySelectorAll('.close-card-btn');
+    // Newly added country
+    closeButtons[closeButtons.length - 1].addEventListener('click', () => {
+        const countryCard = document.querySelectorAll('.full-country-data-container');
+        countryCard.forEach(card => {
+            if (card.dataset.id === countryInfo.countryName)
+                card.remove();
+
+        });
+        // deleteCountryCard(document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1]);
+        // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
+        // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
+    });
 }
 
 
@@ -187,7 +286,6 @@ document.querySelector('.search-bar__btn').addEventListener('click', function (e
     // getCovid19Data(countryToSearch);
     buildCountryCard(countryToSearch);
 });
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SECTION spinners
