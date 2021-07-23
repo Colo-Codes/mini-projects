@@ -192,7 +192,6 @@ const displayCountryCard = async function (countryInfo) {
 
     // document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
 
-
     // const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
     // infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
     // infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
@@ -204,23 +203,27 @@ const displayCountryCard = async function (countryInfo) {
     // vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
     // vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
 
-
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
 
     const flagContainers = document.querySelectorAll('.country__flag-container');
     flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
 
-
-
     const closeButtons = document.querySelectorAll('.close-card-btn');
     // Newly added country
     closeButtons[closeButtons.length - 1].addEventListener('click', () => {
         const countryCard = document.querySelectorAll('.full-country-data-container');
+        // Delete card HTML
         countryCard.forEach(card => {
             if (card.dataset.id === countryInfo.countryName)
                 card.remove();
-
         });
+        // Delete array element
+        countries.forEach(element => {
+            if (element.countryName === countryInfo.countryName) {
+                countries.splice(countries.indexOf(element), 1);
+            }
+        });
+
         // deleteCountryCard(document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1]);
         // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
         // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
