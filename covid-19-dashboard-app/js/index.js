@@ -2,24 +2,66 @@
 
 'use strict';
 
+// SECTION Global variables
+
+let countries = [];
+
+const currentGeolocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+};
+
+// SECTION CountryCard Class
+
+class CountryCard {
+    constructor(countryName, infectConfirmed, infectRecovered, infectDeaths, infectPopulation, vaccAdministered, vaccPartially, vaccFully, compConfirmed = 0, compRecovered = 0, compDeaths = 0, compVaccinations = 0) {
+        this.countryName = countryName
+        this.infectConfirmed = infectConfirmed
+        this.infectRecovered = infectRecovered
+        this.infectDeaths = infectDeaths
+        this.infectPopulation = infectPopulation
+        this.vaccAdministered = vaccAdministered
+        this.vaccPartially = vaccPartially
+        this.vaccFully = vaccFully
+        this.compConfirmed = compConfirmed
+        this.compRecovered = compRecovered
+        this.compDeaths = compDeaths
+        this.compVaccinations = compVaccinations
+    }
+
+    _getComparisonConfirmed() {
+
+    }
+
+    _getComparisonRecovered() {
+
+    }
+
+    _getComparisonDeaths() {
+
+    }
+
+    _getComparisonVaccinations() {
+
+    }
+}
+
+// const countryCard = new CountryCard(country); // TODO Push to countries array
+
+
 // SECTION Get user location
 
-function getCoords(pos) {
+function getCurrentCoords(pos) {
     var crd = pos.coords;
     console.log(pos);
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
-
-    // Spinner off
-    searchingCoords(0);
-
-    getCountry(crd.latitude, crd.longitude);
-
-    // Show map
-    getCountryMap('134.489562606981', '-25.7349684916223');
+    spinnerSearchingCoords('off');
+    getCountryName(crd.latitude, crd.longitude);
 }
 
-function getError(err) {
+function getCurrentCoordsError(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
     /*
 function showError(error) {
@@ -41,19 +83,11 @@ function showError(error) {
     */
 }
 
-const geolocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-};
 
-navigator.geolocation.getCurrentPosition(getCoords, getError, geolocationOptions);
 
-// SECTION Get country
-
-const getCountry = async function (lat, lng) {
+const getCountryName = async function (lat, lng) {
     // Spinner on
-    searchingCountry(1);
+    spinnerSearchingCountry('on');
     // Get country (reverse geocoding)
     const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
     console.log(data);
@@ -63,92 +97,95 @@ const getCountry = async function (lat, lng) {
     console.log(userCountry);
 
     // Spinner off
-    searchingCountry(0);
+    spinnerSearchingCountry('off');
 
     // Load country on search input
-    putCountryOnInput(userCountry);
+    putCountryNameOnSearchBar(userCountry);
 }
 
-// SECTION COVID-19 data
+const displayCountryCard = function (countryInfo) {
+    document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
+    const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
+    infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
+    infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
+    infectionsListItemsValues[2].textContent = countryInfo.infectDeaths;
+    infectionsListItemsValues[3].textContent = countryInfo.infectPopulation;
+
+    const vaccinationsListItemsValues = document.querySelectorAll('.country__vaccinations__list__item__value')
+    vaccinationsListItemsValues[0].textContent = countryInfo.vaccAdministered;
+    vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
+    vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
+
+}
+
+
+const buildCountryCard = async function (country) {
+    const countryInfo = new CountryCard(...await getCovid19Data(country));
+    console.log('countryInfo', countryInfo);
+
+    countries.push(countryInfo);
+    console.log(countries);
+
+    displayCountryCard(countryInfo);
+}
 
 const getCovid19Data = async function (country) {
+    let countryCOVID19Data = []; // Array
+
     // Spinner on
-    searchingCOVID19Data(1);
+    spinnerSearchingCOVID19Data('on');
 
     // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
-    const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => console.log(data));
-    const covid19HistoricalData = await fetch(`https://covid-api.mmediagroup.fr/v1/history?country=${country}&status=deaths`).then(res => res.json()).then(data => console.log(data));
-    const covid19HistoricalData2 = await fetch(`https://covid-api.mmediagroup.fr/v1/history?country=${country}&status=confirmed`).then(res => res.json()).then(data => console.log(data));
-    const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => console.log(data));
+    const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
+        console.log(data);
+        countryCOVID19Data.push(data.All.country);
+        countryCOVID19Data.push(data.All.confirmed);
+        countryCOVID19Data.push(data.All.recovered);
+        countryCOVID19Data.push(data.All.deaths);
+        countryCOVID19Data.push(data.All.population);
+    });
+
+    const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
+        console.log(data);
+        countryCOVID19Data.push(data.All.administered);
+        countryCOVID19Data.push(data.All.people_partially_vaccinated);
+        countryCOVID19Data.push(data.All.people_vaccinated);
+    });
 
     // Spinner off
-    searchingCOVID19Data(0);
+    spinnerSearchingCOVID19Data('off');
 
-    getCountryMap(country);
-}
+    console.log('countryCOVID19Data:', countryCOVID19Data)
 
-// SECTION Map
-
-const getCountryMap = async function (country) {
-
-    // Get lat and lng
-    const myMapboxToken = 'pk.eyJ1IjoiY29sb2NvZGVzIiwiYSI6ImNrcmN6dTVteTU0bzQzMXFodTY3OXJ0dTMifQ.QysxDce4hVKfLLO4PMYi9w' // This should be private, but for the purposes of this project, it's OK
-    const query = `https://api.mapbox.com/geocoding/v5/mapbox.places/${country}.json?access_token=${myMapboxToken}`
-
-    searchingCountryCoords(1);
-    const [lng, lat] = await fetch(query).then(res => res.json()).then(data => data.features[0].center);
-    searchingCountryCoords(0);
-
-    // Leaflet Map API
-    var myMap = L.map('mapId').setView([lat, lng], 3);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoiY29sb2NvZGVzIiwiYSI6ImNrcmN6dTVteTU0bzQzMXFodTY3OXJ0dTMifQ.QysxDce4hVKfLLO4PMYi9w'
-    }).addTo(myMap);
-
-    // var marker = L.marker([-30.5, 50]).addTo(myMap);
-
-    // var mapLocation = new L.LatLng(crd.latitude, crd.longitude);
-    // var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-    // myMap.setView(mapLocation, 13);
-
-    // Mapbox map API (200,000 free tile requests available)
-
-    mapboxgl.accessToken = myMapboxToken;
-    var map = new mapboxgl.Map({
-        container: 'mapId2', // container id
-        style: 'mapbox://styles/mapbox/streets-v11', // style URL
-        center: [lng, lat], // starting position [lng, lat]
-        zoom: 2 // starting zoom
-    });
+    return countryCOVID19Data;
 }
 
 // SECTION Search country
 
-const putCountryOnInput = function (country) {
+const putCountryNameOnSearchBar = function (country) {
     document.querySelector('#search-bar__input__countryToSearch').value = country;
 }
 
+// SECTION Event listeners
+
+navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
+
 document.querySelector('.search-bar__btn').addEventListener('click', function (event) {
     event.preventDefault();
-
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
-
-    getCovid19Data(countryToSearch);
-
+    // getCovid19Data(countryToSearch);
+    buildCountryCard(countryToSearch);
 });
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SECTION spinners
 
-const searchingCountry = function (toggle) {
-    if (toggle === 1) {
+const spinnerSearchingCountry = function (toggle) {
+    if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country...";
+        document.querySelector('.spinner-legend').textContent = "spinnerSearching for country...";
     }
     else {
         // Hide
@@ -157,11 +194,11 @@ const searchingCountry = function (toggle) {
     }
 }
 
-const searchingCoords = function (toggle) {
-    if (toggle === 1) {
+const spinnerSearchingCoords = function (toggle) {
+    if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for coordinates...";
+        document.querySelector('.spinner-legend').textContent = "spinnerSearching for coordinates...";
     }
     else {
         // Hide
@@ -170,13 +207,13 @@ const searchingCoords = function (toggle) {
     }
 }
 // Spinner on
-searchingCoords(1);
+spinnerSearchingCoords('on');
 
-const searchingCOVID19Data = function (toggle) {
-    if (toggle === 1) {
+const spinnerSearchingCOVID19Data = function (toggle) {
+    if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
+        document.querySelector('.spinner-legend').textContent = "spinnerSearching for COVID-19 data...";
     }
     else {
         // Hide
@@ -185,11 +222,11 @@ const searchingCOVID19Data = function (toggle) {
     }
 }
 
-const searchingCountryCoords = function (toggle) {
-    if (toggle === 1) {
+const spinnerSearchingCountryCoords = function (toggle) {
+    if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country coordinates...";
+        document.querySelector('.spinner-legend').textContent = "spinnerSearching for country coordinates...";
     }
     else {
         // Hide

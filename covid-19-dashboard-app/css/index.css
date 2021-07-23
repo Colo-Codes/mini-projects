@@ -206,6 +206,8 @@ html {
 }
 .country__infections__list__item,
 .country__vaccinations__list__item {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
     height: 3rem;
     margin-top: 0.5rem;
@@ -217,6 +219,29 @@ html {
 .country__vaccinations__list__item {
     background-color: rgba(42, 157, 143, 0.1);
 }
+.country__infections__list__item__reference {
+    color: #e76f51;
+    font-size: 1rem;
+    margin: auto 0 auto 1rem;
+}
+.country__infections__list__item__value {
+    color: #e76f51;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin: auto 1rem auto 0;
+}
+.country__vaccinations__list__item__reference {
+    color: #2a9d8f;
+    font-size: 1rem;
+    margin: auto 0 auto 1rem;
+}
+.country__vaccinations__list__item__value {
+    color: #2a9d8f;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin: auto 1rem auto 0;
+}
+
 .country__comparison__list-container {
     display: flex;
     flex-direction: column;
