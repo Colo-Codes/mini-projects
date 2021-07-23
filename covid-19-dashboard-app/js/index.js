@@ -17,7 +17,7 @@ const currentGeolocationOptions = {
 // SECTION CountryCard Class
 
 class CountryCard {
-    constructor(countryName, infectConfirmed, infectRecovered, infectDeaths, infectPopulation, vaccAdministered, vaccPartially, vaccFully, compConfirmed = 0, compRecovered = 0, compDeaths = 0, compVaccinations = 0) {
+    constructor(countryName, infectConfirmed, infectRecovered, infectDeaths, infectPopulation, vaccAdministered, vaccPartially, vaccFully) {
         this.countryName = countryName
         this.infectConfirmed = infectConfirmed
         this.infectRecovered = infectRecovered
@@ -26,10 +26,6 @@ class CountryCard {
         this.vaccAdministered = vaccAdministered
         this.vaccPartially = vaccPartially
         this.vaccFully = vaccFully
-        this.compConfirmed = compConfirmed
-        this.compRecovered = compRecovered
-        this.compDeaths = compDeaths
-        this.compVaccinations = compVaccinations
     }
 
     getComparisonConfirmed(referenceObject) {
@@ -116,6 +112,20 @@ const getCountryFlag = async function (countryName) {
 // }
 
 const displayCountryCard = async function (countryInfo) {
+    let hidden = '';
+    let comparisonConfirmed = '';
+    let comparisonRecovered = '';
+    let comparisonDeaths = '';
+    let comparisonVaccinations = '';
+
+    if (countries.length > 1) {
+        comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
+        comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
+        comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
+        comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
+    } else {
+        hidden = 'hidden';
+    }
 
     const countryCardHTMLStructure = `
         <article class="full-country-data-container" data-id="${countryInfo.countryName}">
@@ -176,15 +186,27 @@ const displayCountryCard = async function (countryInfo) {
                     </div>
                 </div>
             </main>
-            <aside class="country__comparison__list-container">
+            <aside class="country__comparison__list-container ${hidden}">
                 <div class="country__comparison__title">
                     <h3>Comparison with first country</h3>
                 </div>
                 <ul>
-                    <li class="country__comparison__list__item"></li>
-                    <li class="country__comparison__list__item"></li>
-                    <li class="country__comparison__list__item"></li>
-                    <li class="country__comparison__list__item"></li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Confirmed</div>
+                        <div class="country__comparison__list__item__value">${comparisonConfirmed + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Recovered</div>
+                        <div class="country__comparison__list__item__value">${comparisonRecovered + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Deaths</div>
+                        <div class="country__comparison__list__item__value">${comparisonDeaths + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Vaccinations</div>
+                        <div class="country__comparison__list__item__value">${comparisonVaccinations + '%'}</div>
+                    </li>
                 </ul>
             </aside>
         </article>
