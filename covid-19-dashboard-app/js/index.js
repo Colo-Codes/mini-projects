@@ -30,20 +30,20 @@ class CountryCard {
         this.compVaccinations = compVaccinations
     }
 
-    _getComparisonConfirmed() {
-
+    getComparisonConfirmed(referenceObject) {
+        return ((referenceObject.infectConfirmed / referenceObject.infectPopulation - this.infectConfirmed / this.infectPopulation) * 100).toFixed(2);
     }
 
-    _getComparisonRecovered() {
-
+    getComparisonRecovered(referenceObject) {
+        return ((referenceObject.infectRecovered / referenceObject.infectConfirmed - this.infectRecovered / this.infectConfirmed) * 100).toFixed(2);
     }
 
-    _getComparisonDeaths() {
-
+    getComparisonDeaths(referenceObject) {
+        return ((referenceObject.infectDeaths / referenceObject.infectConfirmed - this.infectDeaths / this.infectConfirmed) * 100).toFixed(2);
     }
 
-    _getComparisonVaccinations() {
-
+    getComparisonVaccinations(referenceObject) {
+        return ((referenceObject.vaccAdministered / referenceObject.infectPopulation - this.vaccAdministered / this.infectPopulation) * 100).toFixed(2);
     }
 }
 
@@ -105,6 +105,7 @@ const getCountryName = async function (lat, lng) {
 
 const displayCountryCard = function (countryInfo) {
     document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
+
     const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
     infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
     infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
