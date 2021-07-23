@@ -103,8 +103,16 @@ const getCountryName = async function (lat, lng) {
     putCountryNameOnSearchBar(userCountry);
 }
 
-const displayCountryCard = function (countryInfo) {
+const getCountryFlag = async function (countryName) {
+    const flag = await fetch(`https://restcountries.eu/rest/v2/name/${countryName}`).then(res => res.json()).then(data => data[0].flag);
+    console.log('THIS IS THE FLAG:', flag);
+    return flag;
+}
+
+const displayCountryCard = async function (countryInfo) {
     document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
+
+    document.querySelector('.country__flag-container').style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
 
     const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
     infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
@@ -117,7 +125,9 @@ const displayCountryCard = function (countryInfo) {
     vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
     vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
 
+
 }
+
 
 
 const buildCountryCard = async function (country) {
