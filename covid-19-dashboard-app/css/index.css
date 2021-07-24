@@ -180,7 +180,9 @@ html {
     background-color: gray;
     border-radius: 5px;
     margin-top: 0.35rem;
-    background-size: 100%;
+    /* background-size: 100% 8.75rem; */
+    background-size: cover;
+    background-position: center;
 }
 
 .country__flag__title__container {

@@ -212,19 +212,6 @@ const displayCountryCard = async function (countryInfo) {
         </article>
     `;
 
-    // document.querySelector('.country__flag__title').textContent = countryInfo.countryName;
-
-    // const infectionsListItemsValues = document.querySelectorAll('.country__infections__list__item__value');
-    // infectionsListItemsValues[0].textContent = countryInfo.infectConfirmed;
-    // infectionsListItemsValues[1].textContent = countryInfo.infectRecovered;
-    // infectionsListItemsValues[2].textContent = countryInfo.infectDeaths;
-    // infectionsListItemsValues[3].textContent = countryInfo.infectPopulation;
-
-    // const vaccinationsListItemsValues = document.querySelectorAll('.country__vaccinations__list__item__value')
-    // vaccinationsListItemsValues[0].textContent = countryInfo.vaccAdministered;
-    // vaccinationsListItemsValues[1].textContent = countryInfo.vaccPartially;
-    // vaccinationsListItemsValues[2].textContent = countryInfo.vaccFully;
-
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
 
     const flagContainers = document.querySelectorAll('.country__flag-container');
