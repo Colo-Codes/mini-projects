@@ -107,9 +107,58 @@ const getCountryFlag = async function (countryName) {
     return flag;
 }
 
-// const deleteCountryCard = function (countryCard) {
-//     countryCard.remove();
-// }
+const recalculateComparisons = function () {
+    const comparisonContainers = document.querySelectorAll('.country__comparison__list-container');
+    countries.forEach(country => {
+        // If there is more than one country (card)
+        if (comparisonContainers.length > 1) {
+            comparisonContainers.forEach((card, i) => {
+                if (i === 0) {
+                    comparisonContainers[i].remove(); // First card container
+                }
+                if (i < countries.length - 1) {
+                    console.log(countries.length, countries[i + 1]);
+                    const comparisonConfirmed = countries[i + 1].getComparisonConfirmed(countries[0]);
+                    const comparisonRecovered = countries[i + 1].getComparisonRecovered(countries[0]);
+                    const comparisonDeaths = countries[i + 1].getComparisonDeaths(countries[0]);
+                    const comparisonVaccinations = countries[i + 1].getComparisonVaccinations(countries[0]);
+                    const comparisonContainerUpdated = `
+                        <aside class="country__comparison__list-container">
+                            <div class="country__comparison__title">
+                                <h3>Comparison with first country</h3>
+                            </div>
+                            <ul>
+                                <li class="country__comparison__list__item">
+                                    <div class="country__comparison__list__item__reference">Confirmed</div>
+                                    <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                                </li>
+                                <li class="country__comparison__list__item">
+                                    <div class="country__comparison__list__item__reference">Recovered</div>
+                                    <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                                </li>
+                                <li class="country__comparison__list__item">
+                                    <div class="country__comparison__list__item__reference">Deaths</div>
+                                    <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                                </li>
+                                <li class="country__comparison__list__item">
+                                    <div class="country__comparison__list__item__reference">Vaccinations</div>
+                                    <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                                </li>
+                            </ul>
+                        </aside>
+                    `;
+
+                    // Render updated container
+                    comparisonContainers[i + 1].insertAdjacentHTML('afterend', comparisonContainerUpdated);
+                    // Delete old container
+                    comparisonContainers[i + 1].remove();
+                }
+            });
+        } else {
+            comparisonContainers[0].remove(); // First card container
+        };
+    });
+}
 
 const displayCountryCard = async function (countryInfo) {
     let hidden = '';
@@ -217,25 +266,31 @@ const displayCountryCard = async function (countryInfo) {
     const flagContainers = document.querySelectorAll('.country__flag-container');
     flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
 
-    const closeButtons = document.querySelectorAll('.close-card-btn');
+    // Delete card
+    const deleteButtons = document.querySelectorAll('.close-card-btn');
     // Newly added country
-    closeButtons[closeButtons.length - 1].addEventListener('click', () => {
+    deleteButtons[deleteButtons.length - 1].addEventListener('click', () => {
         const countryCard = document.querySelectorAll('.full-country-data-container');
-        // Delete card HTML
-        countryCard.forEach(card => {
-            if (card.dataset.id === countryInfo.countryName)
-                card.remove();
-        });
         // Delete array element
         countries.forEach(element => {
             if (element.countryName === countryInfo.countryName) {
                 countries.splice(countries.indexOf(element), 1);
             }
         });
+        // Delete card HTML
+        countryCard.forEach((card, i) => {
+            if (card.dataset.id === countryInfo.countryName) {
+                card.remove();
+                recalculateComparisons();
+                // if (i === 0) { // FIXME
+                // }
+            }
+        });
 
-        // deleteCountryCard(document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1]);
-        // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
-        // document.querySelectorAll('.full-country-data-container')[closeButtons.length - 1].remove();
+
+        // deleteCountryCard(document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1]);
+        // document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1].remove();
+        // document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1].remove();
     });
 }
 
