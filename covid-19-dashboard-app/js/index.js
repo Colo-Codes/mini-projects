@@ -29,19 +29,19 @@ class CountryCard {
     }
 
     getComparisonConfirmed(referenceObject) {
-        return ((referenceObject.infectConfirmed / referenceObject.infectPopulation - this.infectConfirmed / this.infectPopulation) * 100).toFixed(2);
+        return ((this.infectConfirmed / this.infectPopulation - referenceObject.infectConfirmed / referenceObject.infectPopulation) * 100).toFixed(2);
     }
 
     getComparisonRecovered(referenceObject) {
-        return ((referenceObject.infectRecovered / referenceObject.infectConfirmed - this.infectRecovered / this.infectConfirmed) * 100).toFixed(2);
+        return ((this.infectRecovered / this.infectConfirmed - referenceObject.infectRecovered / referenceObject.infectConfirmed) * 100).toFixed(2);
     }
 
     getComparisonDeaths(referenceObject) {
-        return ((referenceObject.infectDeaths / referenceObject.infectConfirmed - this.infectDeaths / this.infectConfirmed) * 100).toFixed(2);
+        return ((this.infectDeaths / this.infectConfirmed - referenceObject.infectDeaths / referenceObject.infectConfirmed) * 100).toFixed(2);
     }
 
     getComparisonVaccinations(referenceObject) {
-        return ((referenceObject.vaccAdministered / referenceObject.infectPopulation - this.vaccAdministered / this.infectPopulation) * 100).toFixed(2);
+        return ((this.vaccAdministered / this.infectPopulation - referenceObject.vaccAdministered / referenceObject.infectPopulation) * 100).toFixed(2);
     }
 }
 
@@ -193,19 +193,19 @@ const displayCountryCard = async function (countryInfo) {
                 <ul>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Confirmed</div>
-                        <div class="country__comparison__list__item__value">${comparisonConfirmed + '%'}</div>
+                        <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Recovered</div>
-                        <div class="country__comparison__list__item__value">${comparisonRecovered + '%'}</div>
+                        <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Deaths</div>
-                        <div class="country__comparison__list__item__value">${comparisonDeaths + '%'}</div>
+                        <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
-                        <div class="country__comparison__list__item__value">${comparisonVaccinations + '%'}</div>
+                        <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
                     </li>
                 </ul>
             </aside>
