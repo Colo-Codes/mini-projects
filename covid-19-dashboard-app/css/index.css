@@ -404,6 +404,8 @@ footer {
     background-color: #dff2bf;
     color: #4f8a10;
     border-radius: 5px;
+    box-shadow: 0px 5px 20px 3px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
 }
 
 .close-message-btn {
