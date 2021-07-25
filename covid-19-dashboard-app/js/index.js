@@ -107,13 +107,26 @@ const getCountryFlag = async function (countryName) {
     return flag;
 }
 
+const removeOldMessage = function () {
+    // Remove possible old message
+    const oldMessage = document.querySelector('.message-success');
+    if (oldMessage) {
+        oldMessage.remove();
+    }
+}
+
 const displayComparisonSuccessfullyUpdatedMessage = function () {
+    // Remove possible old message
+    removeOldMessage();
+    // Show new message
     const comparisonSuccessfullyUpdated = `
+        <div class="message-success-container">
         <div class="message-success">
-            <p>Comparison data updated. New reference country is ${countries[0].countryName}.</p>
-            <div class="close-message-btn">
-                <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem"/>
-            </div>
+        <p>${countries.length > 1 ? `Comparison data updated. ` : ``}New reference country is ${countries[0].countryName}.</p>
+        <div class="close-message-btn">
+        <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem"/>
+        </div>
+        </div>
         </div>
         `;
     document.querySelector('.countries-container').insertAdjacentHTML('beforebegin', comparisonSuccessfullyUpdated);
@@ -317,6 +330,10 @@ const displayCountryCard = async function (countryInfo) {
                 // if (i === 0) { // FIXME
                 recalculateComparisons();
                 // }
+                // Hide Reset button
+                if (countryCard.length === 1) {
+                    hideResetButton();
+                }
             }
         });
 
@@ -327,7 +344,13 @@ const displayCountryCard = async function (countryInfo) {
     });
 }
 
+const hideResetButton = function () {
+    document.querySelector('.reset-btn').classList.add('hidden');
+}
 
+const displayResetButton = function () {
+    document.querySelector('.reset-btn').classList.remove('hidden');
+}
 
 const buildCountryCard = async function (country) {
     const countryInfo = new CountryCard(...await getCovid19Data(country));
@@ -337,6 +360,8 @@ const buildCountryCard = async function (country) {
     console.log(countries);
 
     displayCountryCard(countryInfo);
+
+    displayResetButton();
 }
 
 const getCovid19Data = async function (country) {
@@ -391,10 +416,13 @@ document.querySelector('.search-bar__btn').addEventListener('click', function (e
 // SECTION spinners
 
 const spinnerSearchingCountry = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "spinnerSearching for country...";
+        document.querySelector('.spinner-legend').textContent = "Searching for country...";
     }
     else {
         // Hide
@@ -404,10 +432,13 @@ const spinnerSearchingCountry = function (toggle) {
 }
 
 const spinnerSearchingCoords = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "spinnerSearching for coordinates...";
+        document.querySelector('.spinner-legend').textContent = "Searching for coordinates...";
     }
     else {
         // Hide
@@ -419,10 +450,13 @@ const spinnerSearchingCoords = function (toggle) {
 spinnerSearchingCoords('on');
 
 const spinnerSearchingCOVID19Data = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "spinnerSearching for COVID-19 data...";
+        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
     }
     else {
         // Hide
@@ -432,10 +466,13 @@ const spinnerSearchingCOVID19Data = function (toggle) {
 }
 
 const spinnerSearchingCountryCoords = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "spinnerSearching for country coordinates...";
+        document.querySelector('.spinner-legend').textContent = "Searching for country coordinates...";
     }
     else {
         // Hide
