@@ -157,6 +157,11 @@ html {
     flex-direction: column;
     align-items: center;
     margin: 0 2.5rem;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
 }
 .country-container {
     display: flex;
@@ -285,6 +290,11 @@ html {
     filter: drop-shadow(0px 5px 3px rgba(0, 0, 0, 0.4));
     position: relative;
     z-index: 5;
+    animation: slideIn 1s;
+    -webkit-animation: slideIn 1s;
+    -moz-animation: slideIn 1s;
+    -o-animation: slideIn 1s;
+    -ms-animation: slideIn 1s;
 }
 .country__comparison__title {
     width: 100%;
@@ -405,7 +415,11 @@ footer {
     color: #4f8a10;
     border-radius: 5px;
     box-shadow: 0px 5px 20px 3px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
 }
 
 .close-message-btn {
@@ -425,4 +439,98 @@ footer {
 }
 .close-message-btn:hover {
     transform: scale(1.5, 1.5);
+}
+
+/* SECTION Animations */
+
+/* fadeIn */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* slideIn */
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@-moz-keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@-webkit-keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@-o-keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@-ms-keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
