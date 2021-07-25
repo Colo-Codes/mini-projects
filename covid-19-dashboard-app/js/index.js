@@ -108,75 +108,115 @@ const getCountryFlag = async function (countryName) {
 }
 
 const recalculateComparisons = function () {
-    const comparisonContainers = document.querySelectorAll('.country__comparison__list-container');
-    countries.forEach(country => {
-        // If there is more than one country (card)
-        if (comparisonContainers.length > 1) {
-            comparisonContainers.forEach((card, i) => {
-                if (i === 0) {
-                    comparisonContainers[i].remove(); // First card container
-                }
-                if (i < countries.length - 1) {
-                    console.log(countries.length, countries[i + 1]);
-                    const comparisonConfirmed = countries[i + 1].getComparisonConfirmed(countries[0]);
-                    const comparisonRecovered = countries[i + 1].getComparisonRecovered(countries[0]);
-                    const comparisonDeaths = countries[i + 1].getComparisonDeaths(countries[0]);
-                    const comparisonVaccinations = countries[i + 1].getComparisonVaccinations(countries[0]);
-                    const comparisonContainerUpdated = `
-                        <aside class="country__comparison__list-container">
-                            <div class="country__comparison__title">
-                                <h3>Comparison with first country</h3>
-                            </div>
-                            <ul>
-                                <li class="country__comparison__list__item">
-                                    <div class="country__comparison__list__item__reference">Confirmed</div>
-                                    <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
-                                </li>
-                                <li class="country__comparison__list__item">
-                                    <div class="country__comparison__list__item__reference">Recovered</div>
-                                    <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
-                                </li>
-                                <li class="country__comparison__list__item">
-                                    <div class="country__comparison__list__item__reference">Deaths</div>
-                                    <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
-                                </li>
-                                <li class="country__comparison__list__item">
-                                    <div class="country__comparison__list__item__reference">Vaccinations</div>
-                                    <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
-                                </li>
-                            </ul>
-                        </aside>
-                    `;
-
-                    // Render updated container
-                    comparisonContainers[i + 1].insertAdjacentHTML('afterend', comparisonContainerUpdated);
-                    // Delete old container
-                    comparisonContainers[i + 1].remove();
-                }
-            });
+    const countryCards = document.querySelectorAll('.full-country-data-container');
+    countryCards.forEach((card, i) => {
+        const comparisonContainer = card.lastElementChild;
+        if (i === 0) {
+            // Render "Reference country" for first country card and remove comparison data
+            const comparisonHTML = `
+                <aside class="country__comparison__list-container">
+                    <div class="country__comparison__title reference-country">
+                        <h3>Reference country</h3>
+                    </div>
+                </aside>
+            `;
+            comparisonContainer.insertAdjacentHTML('afterend', comparisonHTML)
+            comparisonContainer.remove();
         } else {
-            comparisonContainers[0].remove(); // First card container
-        };
+            // Recalculate and render other country cards comparison data
+            const comparisonConfirmed = countries[i].getComparisonConfirmed(countries[0]);
+            const comparisonRecovered = countries[i].getComparisonRecovered(countries[0]);
+            const comparisonDeaths = countries[i].getComparisonDeaths(countries[0]);
+            const comparisonVaccinations = countries[i].getComparisonVaccinations(countries[0]);
+            const comparisonContainerUpdated = `
+                <aside class="country__comparison__list-container">
+                    <div class="country__comparison__title">
+                        <h3>Comparison with first country</h3>
+                    </div>
+                    <ul>
+                        <li class="country__comparison__list__item">
+                            <div class="country__comparison__list__item__reference">Confirmed</div>
+                            <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                        </li>
+                        <li class="country__comparison__list__item">
+                            <div class="country__comparison__list__item__reference">Recovered</div>
+                            <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                        </li>
+                        <li class="country__comparison__list__item">
+                            <div class="country__comparison__list__item__reference">Deaths</div>
+                            <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                        </li>
+                        <li class="country__comparison__list__item">
+                            <div class="country__comparison__list__item__reference">Vaccinations</div>
+                            <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                        </li>
+                    </ul>
+                </aside>
+            `;
+            console.log(comparisonContainerUpdated);
+            // Render updated container
+            comparisonContainer.insertAdjacentHTML('afterend', comparisonContainerUpdated);
+            // Delete old container
+            comparisonContainer.remove();
+        }
     });
 }
 
 const displayCountryCard = async function (countryInfo) {
-    let hidden = '';
-    let comparisonConfirmed = '';
-    let comparisonRecovered = '';
-    let comparisonDeaths = '';
-    let comparisonVaccinations = '';
+    let comparisonConfirmed;
+    let comparisonRecovered;
+    let comparisonDeaths;
+    let comparisonVaccinations;
+    let countryCardHTMLStructure;
+    let comparisonHTML;
 
     if (countries.length > 1) {
         comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
         comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
         comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
         comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
+
+        comparisonHTML = `
+        <aside class="country__comparison__list-container">
+                <div class="country__comparison__title">
+                    <h3>Comparison with first country</h3>
+                </div>
+                <ul>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Confirmed</div>
+                        <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Recovered</div>
+                        <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Deaths</div>
+                        <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                    </li>
+                    <li class="country__comparison__list__item">
+                        <div class="country__comparison__list__item__reference">Vaccinations</div>
+                        <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                    </li>
+                </ul>
+            </aside>
+
+        </article>
+        `;
     } else {
-        hidden = 'hidden';
+        // Render "Reference country" for first country card
+        comparisonHTML = `
+            <aside class="country__comparison__list-container">
+                    <div class="country__comparison__title reference-country">
+                        <h3>Reference country</h3>
+                    </div>
+            </aside>
+        
+        </article>
+        `;
     }
 
-    const countryCardHTMLStructure = `
+    countryCardHTMLStructure = `
         <article class="full-country-data-container" data-id="${countryInfo.countryName}">
             <main class="country-container">
                 <div class="close-card-btn">
@@ -235,31 +275,9 @@ const displayCountryCard = async function (countryInfo) {
                     </div>
                 </div>
             </main>
-            <aside class="country__comparison__list-container ${hidden}">
-                <div class="country__comparison__title">
-                    <h3>Comparison with first country</h3>
-                </div>
-                <ul>
-                    <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Confirmed</div>
-                        <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
-                    </li>
-                    <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Recovered</div>
-                        <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
-                    </li>
-                    <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Deaths</div>
-                        <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
-                    </li>
-                    <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Vaccinations</div>
-                        <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
-                    </li>
-                </ul>
-            </aside>
-        </article>
     `;
+
+    countryCardHTMLStructure += comparisonHTML;
 
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
 
@@ -281,8 +299,8 @@ const displayCountryCard = async function (countryInfo) {
         countryCard.forEach((card, i) => {
             if (card.dataset.id === countryInfo.countryName) {
                 card.remove();
-                recalculateComparisons();
                 // if (i === 0) { // FIXME
+                recalculateComparisons();
                 // }
             }
         });
