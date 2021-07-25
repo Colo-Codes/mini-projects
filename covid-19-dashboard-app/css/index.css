@@ -392,3 +392,35 @@ html {
 footer {
     height: 4rem;
 }
+
+/* SECTION Messages */
+
+.message-success {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem auto;
+    padding: 1rem;
+    width: fit-content;
+    background-color: #dff2bf;
+    color: #4f8a10;
+    border-radius: 5px;
+}
+
+.close-message-btn {
+    margin: -0.8rem -0.8rem 0 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.close-message-btn img {
+    display: block;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin: 0.35rem auto;
+    filter: invert(64%) sepia(69%) saturate(6681%) hue-rotate(61deg)
+        brightness(91%) contrast(87%);
+}
+.close-message-btn:hover {
+    transform: scale(1.5, 1.5);
+}

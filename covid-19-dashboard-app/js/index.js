@@ -107,6 +107,20 @@ const getCountryFlag = async function (countryName) {
     return flag;
 }
 
+const displayComparisonSuccessfullyUpdatedMessage = function () {
+    const comparisonSuccessfullyUpdated = `
+        <div class="message-success">
+            <p>Comparison data updated. New reference country is ${countries[0].countryName}.</p>
+            <div class="close-message-btn">
+                <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem"/>
+            </div>
+        </div>
+        `;
+    document.querySelector('.countries-container').insertAdjacentHTML('beforebegin', comparisonSuccessfullyUpdated);
+    // Delete button event listener
+    document.querySelector('.close-message-btn').addEventListener('click', () => document.querySelector('.message-success').remove());
+};
+
 const recalculateComparisons = function () {
     const countryCards = document.querySelectorAll('.full-country-data-container');
     countryCards.forEach((card, i) => {
@@ -153,13 +167,14 @@ const recalculateComparisons = function () {
                     </ul>
                 </aside>
             `;
-            console.log(comparisonContainerUpdated);
             // Render updated container
             comparisonContainer.insertAdjacentHTML('afterend', comparisonContainerUpdated);
             // Delete old container
             comparisonContainer.remove();
         }
     });
+    // Display message about updated data
+    displayComparisonSuccessfullyUpdatedMessage();
 }
 
 const displayCountryCard = async function (countryInfo) {
