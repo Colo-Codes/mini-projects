@@ -61,13 +61,13 @@ function getCurrentCoordsError(error) {
             displayErrorMessage('automatic geolocation', new Error('User denied the request for Geolocation'));
             break;
         case error.POSITION_UNAVAILABLE:
-            displayErrorMessage('automatic geolocation', new Error('Location information is unavailable.'));
+            displayErrorMessage('automatic geolocation', new Error('Location information is unavailable'));
             break;
         case error.TIMEOUT:
-            displayErrorMessage('automatic geolocation', new Error('The request to get user location timed out.'));
+            displayErrorMessage('automatic geolocation', new Error('The request to get user location timed out'));
             break;
         case error.UNKNOWN_ERROR:
-            displayErrorMessage('automatic geolocation', new Error('An unknown error occurred.'));
+            displayErrorMessage('automatic geolocation', new Error('An unknown error occurred'));
             break;
     }
 }
@@ -186,19 +186,19 @@ const recalculateComparisons = function () {
                     <ul>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Confirmed</div>
-                            <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : ((comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Recovered</div>
-                            <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : ((comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Deaths</div>
-                            <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : ((comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Vaccinations</div>
-                            <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : ((comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%')}</div>
                         </li>
                     </ul>
                     </aside>
@@ -284,19 +284,19 @@ const displayCountryCard = async function (countryInfo) {
         <ul>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Confirmed</div>
-                    <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Recovered</div>
-                    <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Deaths</div>
-                    <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
-                        <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
                         </li>
                         </ul>
             </aside>
@@ -316,8 +316,9 @@ const displayCountryCard = async function (countryInfo) {
                     `;
     }
 
+    // FIXME data-id could be a country name with spaces
     countryCardHTMLStructure = `
-        <article class="full-country-data-container" data-id="${countryInfo.countryName}">
+        <article class="full-country-data-container" data-id="${countryInfo.countryName === undefined ? 'Name-not-found' : countryInfo.countryName}">
         <main class="country-container">
         <div class="close-card-btn">
         <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
@@ -325,7 +326,7 @@ const displayCountryCard = async function (countryInfo) {
                 <div class="country__flag-container">
                     <div class="country__flag__flag-empty"></div>
                     <div class="country__flag__title__container">
-                    <div class="country__flag__title">${countryInfo.countryName}</div>
+                    <div class="country__flag__title">${countryInfo.countryName === undefined ? 'Name not found' : countryInfo.countryName}</div>
                     </div>
                     </div>
                     <div class="country__infections-container">
@@ -336,46 +337,47 @@ const displayCountryCard = async function (countryInfo) {
                     <ul>
                     <li class="country__infections__list__item">
                     <div class="country__infections__list__item__reference">Confirmed</div>
-                    <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectConfirmed)}</div>
-                    </li>
+                    <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectConfirmed) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectConfirmed)
+        }</div>
+                    </li >
                     <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Recovered</div>
-                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectRecovered)}</div>
+                                <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectRecovered) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectRecovered)}</div>
                             </li>
                             <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Deaths</div>
-                            <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectDeaths) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
                             </li>
                             <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Population</div>
-                            <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectPopulation) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
                             </li>
-                            </ul>
-                            </div>
-                </div>
-                <div class="country__vaccinations-container">
-                <div class="country__vaccinations__title">
-                <h3>COVID-19 vaccinations</h3>
-                </div>
-                    <div class="country__vaccinations__list-container">
-                        <ul>
-                        <li class="country__vaccinations__list__item">
-                        <div class="country__vaccinations__list__item__reference">Administered</div>
-                        <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
-                        </li>
-                            <li class="country__vaccinations__list__item">
-                            <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
-                            <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
-                            </li>
-                            <li class="country__vaccinations__list__item">
-                            <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
-                            <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
-                            </li>
-                            </ul>
-                            </div>
-                            </div>
-                            </main>
-                            `;
+                            </ul >
+                            </div >
+                </div >
+    <div class="country__vaccinations-container">
+        <div class="country__vaccinations__title">
+            <h3>COVID-19 vaccinations</h3>
+        </div>
+        <div class="country__vaccinations__list-container">
+            <ul>
+                <li class="country__vaccinations__list__item">
+                    <div class="country__vaccinations__list__item__reference">Administered</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccAdministered) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
+                </li>
+                <li class="country__vaccinations__list__item">
+                    <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccPartially) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
+                </li>
+                <li class="country__vaccinations__list__item">
+                    <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccFully) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+                            </main >
+    `;
 
     countryCardHTMLStructure += comparisonHTML;
 
@@ -408,16 +410,20 @@ const buildCountryCard = async function (country) {
         displayCountryCard(countryInfo);
         displayResetButton();
     } catch (err) {
+        // if (!countryInfo) {
+        //     displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 data'));
+        // } else {
+        // }
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
     }
 }
 
 const getCovid19Data = async function (country) {
-    try {
 
-        // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
-        let countryCOVID19Data = []; // Array
-        spinnerSearchingCOVID19Data('on');
+    // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
+    let countryCOVID19Data = []; // Array
+    spinnerSearchingCOVID19Data('on');
+    try {
         const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
             countryCOVID19Data.push(data.All.country);
             countryCOVID19Data.push(data.All.confirmed);
@@ -425,17 +431,29 @@ const getCovid19Data = async function (country) {
             countryCOVID19Data.push(data.All.deaths);
             countryCOVID19Data.push(data.All.population);
         });
-
+    } catch (err) {
+        // if (!covid19CurrentData) {
+        displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 data'));
+        // } else {
+        //     displayErrorMessage('getting COVID-19 data', new Error(err));
+        // }
+    }
+    try {
         const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
             countryCOVID19Data.push(data.All.administered);
             countryCOVID19Data.push(data.All.people_partially_vaccinated);
             countryCOVID19Data.push(data.All.people_vaccinated);
         });
-        spinnerSearchingCOVID19Data('off');
-        return countryCOVID19Data;
     } catch (err) {
-        displayErrorMessage('getting COVID-19 data', new Error(err));
+        // if (!covid19CurrentData) {
+        displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 vaccination data'));
+        // } else {
+        //     displayErrorMessage('getting COVID-19 data', new Error(err));
+        // }
     }
+
+    spinnerSearchingCOVID19Data('off');
+    return countryCOVID19Data;
 }
 
 // SECTION Search country
@@ -458,6 +476,7 @@ document.querySelector('.search-bar__btn').addEventListener('click', event => {
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
     // getCovid19Data(countryToSearch);
     buildCountryCard(countryToSearch);
+    document.querySelector('#search-bar__input__countryToSearch').value = '';
 });
 
 // Reset button
@@ -570,9 +589,21 @@ function autocomplete(inp, arr) {
 let countriesListArr = [];
 const getCountriesList = async function () {
     try {
-        const countriesList = await fetch('https://api.teleport.org/api/countries/').then(res => res.json()).then(data => data);
-        for (let i = 0; i < countriesList._links['country:items'].length; i++) {
-            countriesListArr.push(countriesList._links['country:items'][i].name);
+        // const countriesList = await fetch('https://api.teleport.org/api/countries/').then(res => res.json()).then(data => data);
+        // for (let i = 0; i < countriesList._links['country:items'].length; i++) {
+        //     countriesListArr.push(countriesList._links['country:items'][i].name);
+        // }
+        // Using the same API as the one to get COVID-19 cases so no invalid country is displayed
+        const countriesList = await fetch('https://covid-api.mmediagroup.fr/v1/cases').then(e => e.json()).then(data => data);
+        for (const [key, value] of Object.entries(countriesList)) {
+            // Excluding countries that do not have basic data
+            if (value.All.hasOwnProperty('country') &&
+                value.All.hasOwnProperty('confirmed') &&
+                value.All.hasOwnProperty('recovered') &&
+                value.All.hasOwnProperty('deaths') &&
+                value.All.hasOwnProperty('population')) {
+                countriesListArr.push(key);
+            }
         }
     } catch (err) {
         displayErrorMessage('getting list of countries', new Error(err));
