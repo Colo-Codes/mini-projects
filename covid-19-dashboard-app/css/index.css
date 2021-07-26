@@ -25,21 +25,47 @@ html {
     --font: 'Montserrat', sans-serif;
 }
 
-/* SECTION Leaflet map API */
-
-#mapId,
-#mapId2 {
-    height: 130px;
-    width: 220px;
-}
-
 /* SECTION Background */
 
-.background {
-    background-color: rgba(38, 70, 83, 0.7);
+.background,
+.background__image {
     width: 100%;
     /* height: 100vh; */
     min-height: 100vh;
+}
+.background {
+    position: absolute;
+    background-color: rgba(38, 70, 83, 0.8);
+    z-index: -20;
+}
+/* NOTE: Adding a 'filter: blur()' to the image added an ugly white border on it, so I found an alternative using 'backdrop-filter', although it's not fully supported */
+/* https://stackoverflow.com/questions/28870932/how-to-remove-white-border-from-blur-background-image (I added extra support check)*/
+@supports (backdrop-filter: blur(0.5rem)) {
+    .background__image::after {
+        backdrop-filter: blur(
+            0.5rem
+        ); /* apply the blur (it works on Chrome, but not in Safari or Firefox */
+    }
+}
+@supports not (backdrop-filter: blur(0.5rem)) {
+    .background__image {
+        filter: blur(0.5rem);
+        outline: 0.5rem solid var(--color-dark-green);
+    }
+}
+.background__image::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* make the overlay click-through */
+}
+.background__image {
+    position: absolute;
+    background: url('../img/fusion-medical-animation-npjP0dCtoxo-unsplash.jpg')
+        center no-repeat;
+    background-size: cover;
+    z-index: -10;
 }
 .switch-background-btn-container {
     left: 90%;
@@ -47,7 +73,7 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     cursor: pointer;
     width: 1.875rem;
     height: 3.125rem;
@@ -57,17 +83,18 @@ html {
     color: var(--color-light-green);
     font-size: 0.7rem;
 }
+
 .switch-background-btn {
     width: 1.25rem;
     height: 1.25rem;
     background-color: var(--color-light-green);
     border-radius: 50%;
-    margin-bottom: 0.25rem;
     transition: all 0.2s;
 }
 .switch-background-btn:hover {
     background-color: var(--color-dark-green);
 }
+
 /* SECTION Title */
 
 .title-container {

@@ -563,6 +563,36 @@ document.querySelector('.reset-btn').addEventListener('click', () => {
     document.querySelector('.add-current-country-btn').classList.remove('hidden');
 });
 
+// Switch background button
+let switchBackground = true;
+document.querySelector('.switch-background-btn-container').addEventListener('click', () => {
+    const switchButton = document.querySelector('.switch-background-btn-container')
+    const backgroundImageClassList = document.querySelector('.background__image').classList;
+    if (switchBackground) {
+        backgroundImageClassList.add('hidden');
+        while (switchButton.firstChild) {
+            switchButton.removeChild(switchButton.firstChild);
+        }
+        const buttonOff = `
+            <div class="switch-background-btn"></div>
+            <p>OFF</p>
+                `;
+        switchButton.insertAdjacentHTML('afterbegin', buttonOff);
+        switchBackground = !switchBackground;
+    } else {
+        backgroundImageClassList.remove('hidden');
+        while (switchButton.firstChild) {
+            switchButton.removeChild(switchButton.firstChild);
+        }
+        const buttonOn = `
+            <p>ON</p>
+            <div class="switch-background-btn"></div>
+                `;
+        switchButton.insertAdjacentHTML('afterbegin', buttonOn);
+        switchBackground = !switchBackground;
+    }
+});
+
 // SECTION Countries autocomplete (adapted from https://www.w3schools.com/howto/howto_js_autocomplete.asp)
 
 function autocomplete(inp, arr) {
