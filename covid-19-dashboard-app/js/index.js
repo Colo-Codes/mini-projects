@@ -45,13 +45,60 @@ class CountryCard {
     }
 }
 
-// const countryCard = new CountryCard(country); // TODO Push to countries array
+// SECTION spinners
 
+const spinnerSearchingUserLocation = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
+    if (toggle === 'on') {
+        // Show
+        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
+        document.querySelector('.spinner-legend').textContent = "Searching user location...";
+    }
+    else {
+        // Hide
+        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
+        document.querySelector('.spinner-legend').textContent = "";
+    }
+}
+
+const spinnerSearchingCountry = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
+    if (toggle === 'on') {
+        // Show
+        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
+        document.querySelector('.spinner-legend').textContent = "Searching for country...";
+    }
+    else {
+        // Hide
+        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
+        document.querySelector('.spinner-legend').textContent = "";
+    }
+}
+
+const spinnerSearchingCOVID19Data = function (toggle) {
+    // Remove possible old message
+    removeOldMessage();
+
+    if (toggle === 'on') {
+        // Show
+        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
+        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
+    }
+    else {
+        // Hide
+        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
+        document.querySelector('.spinner-legend').textContent = "";
+    }
+}
 
 // SECTION Get user location
 
 function getCurrentCoords(pos) {
-    var crd = pos.coords;
+    const crd = pos.coords;
     getCountryName(crd.latitude, crd.longitude);
 }
 
@@ -70,6 +117,9 @@ function getCurrentCoordsError(error) {
             displayErrorMessage('automatic geolocation', new Error('An unknown error occurred'));
             break;
     }
+    spinnerSearchingUserLocation('off');
+    // Allow user to enter a country on search box input
+    checkCountryLimitReached(0);
 }
 
 const getCountryName = async function (lat, lng) {
@@ -84,12 +134,16 @@ const getCountryName = async function (lat, lng) {
         if (userCountry === undefined) {
             displayErrorMessage('getting country name', new Error('Country name is undefined'));
         } else {
-            // Load country on search input
-            putCountryNameOnSearchBar(userCountry);
+            // Display country card
+            await buildCountryCard(userCountry);
+            document.querySelector('#search-bar__input__countryToSearch').value = '';
         }
-
+        // Allow user to enter a country on search box input
+        checkCountryLimitReached(0);
     } catch (err) {
         displayErrorMessage('getting country name', new Error(err));
+        // Allow user to enter a country on search box input
+        checkCountryLimitReached(0);
     }
 }
 
@@ -241,21 +295,26 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
         });
 
         checkCountryLimitReached();
+
+        if (countries.length === 0) {
+            // Show 'Add my current country' button
+            document.querySelector('.add-current-country-btn').classList.remove('hidden');
+        }
     });
 };
 
-const checkCountryLimitReached = function () {
+const checkCountryLimitReached = function (forceLimit = 0, country = '') {
     // Prevent further countries from being added (4 countries maximum)
     const searchButton = document.querySelector('.search-bar__btn');
     const inputField = document.getElementById('search-bar__input__countryToSearch');
-    if (countries.length >= 4) {
+    if (countries.length >= 4 || forceLimit === 1) {
         inputField.disabled = true;
-        inputField.value = 'Country comparison limit reached';
+        !(forceLimit === 1) ? inputField.value = 'Country comparison limit reached' : inputField.value = 'Country being acquired...';
         searchButton.classList.add('hidden');
     } else {
         if (searchButton.classList.contains('hidden')) {
             inputField.disabled = false;
-            inputField.value = '';
+            inputField.value = country;
             searchButton.classList.remove('hidden');
         }
     }
@@ -416,6 +475,8 @@ const buildCountryCard = async function (country) {
         // }
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
     }
+    // Hide 'Add my current country' button
+    document.querySelector('.add-current-country-btn').classList.add('hidden');
 }
 
 const getCovid19Data = async function (country) {
@@ -458,25 +519,38 @@ const getCovid19Data = async function (country) {
 
 // SECTION Search country
 
-const putCountryNameOnSearchBar = function (country) {
-    document.querySelector('#search-bar__input__countryToSearch').value = country;
-}
+// const putCountryNameOnSearchBar = function (country) {
+//     document.querySelector('#search-bar__input__countryToSearch').value = country;
+// }
 
 // SECTION Event listeners
 
 // Hide spinner
 document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
 
-// Automatic geolocation
-navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
-
 // Add new country button
 document.querySelector('.search-bar__btn').addEventListener('click', event => {
     event.preventDefault();
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
-    // getCovid19Data(countryToSearch);
-    buildCountryCard(countryToSearch);
+    // Check if country is valid
+    if (countriesListArr.indexOf(countryToSearch) === -1) { // FIXME await until array is actually built to prevent errors
+        displayErrorMessage('country name', new Error('Country name not found'));
+    } else {
+        buildCountryCard(countryToSearch);
+    }
     document.querySelector('#search-bar__input__countryToSearch').value = '';
+});
+
+// Add current country button
+document.querySelector('.add-current-country-btn').addEventListener('click', () => {
+    // Automatic geolocation
+    spinnerSearchingUserLocation('on');
+    // Prevent user from entering country on search box input
+    checkCountryLimitReached(1);
+    // Disable button
+    document.querySelector('.add-current-country-btn').classList.add('hidden');
+    // Get user country
+    navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
 });
 
 // Reset button
@@ -485,6 +559,8 @@ document.querySelector('.reset-btn').addEventListener('click', () => {
     document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
     countries.splice(0, countries.length);
     checkCountryLimitReached();
+    // Show 'Add my current country' button
+    document.querySelector('.add-current-country-btn').classList.remove('hidden');
 });
 
 // SECTION Countries autocomplete (adapted from https://www.w3schools.com/howto/howto_js_autocomplete.asp)
@@ -574,7 +650,7 @@ function autocomplete(inp, arr) {
         /*close all autocomplete lists in the document,
         except the one passed as an argument:*/
         let x = document.getElementsByClassName("autocomplete-items");
-        for (var i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
                 x[i].parentNode.removeChild(x[i]);
             }
@@ -613,37 +689,3 @@ getCountriesList();
 /*initiate the autocomplete function on the "search-bar__input__countryToSearch" element, and pass along the countries array as possible autocomplete values:*/
 autocomplete(document.getElementById("search-bar__input__countryToSearch"), countriesListArr);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SECTION spinners
-
-const spinnerSearchingCountry = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country...";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}
-
-const spinnerSearchingCOVID19Data = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}

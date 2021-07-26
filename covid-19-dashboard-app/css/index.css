@@ -387,9 +387,10 @@ html {
 
 /* SECTION Reset */
 
-.reset-btn {
+.reset-btn,
+.add-current-country-btn {
     display: block; /* By default, it's an inline element */
-    width: 12.5rem;
+    width: 13rem;
     height: 2.5rem;
     background-color: var(--color-white);
     margin: 4rem auto 0 auto;
@@ -402,7 +403,8 @@ html {
     transition: all 0.2s;
 }
 
-.reset-btn:hover {
+.reset-btn:hover,
+.add-current-country-btn:hover {
     background-color: var(--color-dark-green);
     color: var(--color-white);
     cursor: pointer;
