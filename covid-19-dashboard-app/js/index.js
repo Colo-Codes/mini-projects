@@ -119,7 +119,9 @@ const displayComparisonSuccessfullyUpdatedMessage = function () {
     // Remove possible old message
     removeOldMessage();
     // Show new message
-    const comparisonSuccessfullyUpdated = `
+    if (countries.length > 0) {
+
+        const comparisonSuccessfullyUpdated = `
         <div class="message-success-container">
         <div class="message-success">
         <p>${countries.length > 1 ? `Comparison data updated. ` : ``}New reference country is ${countries[0].countryName}.</p>
@@ -129,9 +131,10 @@ const displayComparisonSuccessfullyUpdatedMessage = function () {
         </div>
         </div>
         `;
-    document.querySelector('.countries-container').insertAdjacentHTML('beforebegin', comparisonSuccessfullyUpdated);
-    // Delete button event listener
-    document.querySelector('.close-message-btn').addEventListener('click', () => document.querySelector('.message-success').remove());
+        document.querySelector('.countries-container').insertAdjacentHTML('beforebegin', comparisonSuccessfullyUpdated);
+        // Delete button event listener
+        document.querySelector('.close-message-btn').addEventListener('click', () => document.querySelector('.message-success').remove());
+    }
 };
 
 const recalculateComparisons = function () {
@@ -178,8 +181,8 @@ const recalculateComparisons = function () {
                             <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
                         </li>
                     </ul>
-                </aside>
-            `;
+                    </aside>
+                    `;
             // Render updated container
             comparisonContainer.insertAdjacentHTML('afterend', comparisonContainerUpdated);
             // Delete old container
@@ -189,6 +192,34 @@ const recalculateComparisons = function () {
     // Display message about updated data
     displayComparisonSuccessfullyUpdatedMessage();
 }
+
+const addEventListenerToCardDeleteButton = function (countryInfo) {
+    // Delete card
+    const deleteButtons = document.querySelectorAll('.close-card-btn');
+    // Newly added country
+    deleteButtons[deleteButtons.length - 1].addEventListener('click', () => {
+        const countryCards = document.querySelectorAll('.full-country-data-container');
+        // Delete array element
+        countries.forEach(element => {
+            if (element.countryName === countryInfo.countryName) {
+                countries.splice(countries.indexOf(element), 1);
+            }
+        });
+        // Delete card HTML
+        countryCards.forEach((card, i) => {
+            if (card.dataset.id === countryInfo.countryName) {
+                card.remove();
+
+                recalculateComparisons();
+
+                if (countryCards.length === 1) {
+                    hideResetButton();
+                }
+            }
+        });
+
+    });
+};
 
 const displayCountryCard = async function (countryInfo) {
     let comparisonConfirmed;
@@ -312,36 +343,7 @@ const displayCountryCard = async function (countryInfo) {
     const flagContainers = document.querySelectorAll('.country__flag-container');
     flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
 
-    // Delete card
-    const deleteButtons = document.querySelectorAll('.close-card-btn');
-    // Newly added country
-    deleteButtons[deleteButtons.length - 1].addEventListener('click', () => {
-        const countryCard = document.querySelectorAll('.full-country-data-container');
-        // Delete array element
-        countries.forEach(element => {
-            if (element.countryName === countryInfo.countryName) {
-                countries.splice(countries.indexOf(element), 1);
-            }
-        });
-        // Delete card HTML
-        countryCard.forEach((card, i) => {
-            if (card.dataset.id === countryInfo.countryName) {
-                card.remove();
-                // if (i === 0) { // FIXME
-                recalculateComparisons();
-                // }
-                // Hide Reset button
-                if (countryCard.length === 1) {
-                    hideResetButton();
-                }
-            }
-        });
-
-
-        // deleteCountryCard(document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1]);
-        // document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1].remove();
-        // document.querySelectorAll('.full-country-data-container')[deleteButtons.length - 1].remove();
-    });
+    addEventListenerToCardDeleteButton(countryInfo);
 }
 
 const hideResetButton = function () {
@@ -405,11 +407,16 @@ const putCountryNameOnSearchBar = function (country) {
 
 navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
 
-document.querySelector('.search-bar__btn').addEventListener('click', function (event) {
+document.querySelector('.search-bar__btn').addEventListener('click', event => {
     event.preventDefault();
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
     // getCovid19Data(countryToSearch);
     buildCountryCard(countryToSearch);
+});
+
+document.querySelector('.reset-btn').addEventListener('click', () => {
+    document.querySelector('.reset-btn').classList.add('hidden');
+    document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

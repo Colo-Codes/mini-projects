@@ -388,7 +388,7 @@ html {
     width: 12.5rem;
     height: 2.5rem;
     background-color: var(--color-white);
-    margin: 4rem auto;
+    margin: 4rem auto 0 auto;
     border-radius: 20px;
     border: none;
     box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
@@ -407,7 +407,7 @@ html {
 /* SECTION Footer */
 
 footer {
-    height: 4rem;
+    height: 2rem;
 }
 
 /* SECTION Messages */
