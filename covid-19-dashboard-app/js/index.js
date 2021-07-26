@@ -18,14 +18,14 @@ const currentGeolocationOptions = {
 
 class CountryCard {
     constructor(countryName, infectConfirmed, infectRecovered, infectDeaths, infectPopulation, vaccAdministered, vaccPartially, vaccFully) {
-        this.countryName = countryName
-        this.infectConfirmed = infectConfirmed
-        this.infectRecovered = infectRecovered
-        this.infectDeaths = infectDeaths
-        this.infectPopulation = infectPopulation
-        this.vaccAdministered = vaccAdministered
-        this.vaccPartially = vaccPartially
-        this.vaccFully = vaccFully
+        this.countryName = countryName;
+        this.infectConfirmed = infectConfirmed;
+        this.infectRecovered = infectRecovered;
+        this.infectDeaths = infectDeaths;
+        this.infectPopulation = infectPopulation;
+        this.vaccAdministered = vaccAdministered;
+        this.vaccPartially = vaccPartially;
+        this.vaccFully = vaccFully;
     }
 
     getComparisonConfirmed(referenceObject) {
@@ -154,10 +154,10 @@ const recalculateComparisons = function () {
             comparisonContainer.remove();
         } else {
             // Recalculate and render other country cards comparison data
-            const comparisonConfirmed = countries[i].getComparisonConfirmed(countries[0]);
-            const comparisonRecovered = countries[i].getComparisonRecovered(countries[0]);
-            const comparisonDeaths = countries[i].getComparisonDeaths(countries[0]);
-            const comparisonVaccinations = countries[i].getComparisonVaccinations(countries[0]);
+            const comparisonConfirmed = new Intl.NumberFormat().format(countries[i].getComparisonConfirmed(countries[0]));
+            const comparisonRecovered = new Intl.NumberFormat().format(countries[i].getComparisonRecovered(countries[0]));
+            const comparisonDeaths = new Intl.NumberFormat().format(countries[i].getComparisonDeaths(countries[0]));
+            const comparisonVaccinations = new Intl.NumberFormat().format(countries[i].getComparisonVaccinations(countries[0]));
             const comparisonContainerUpdated = `
                 <aside class="country__comparison__list-container">
                     <div class="country__comparison__title">
@@ -230,10 +230,10 @@ const displayCountryCard = async function (countryInfo) {
     let comparisonHTML;
 
     if (countries.length > 1) {
-        comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
-        comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
-        comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
-        comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
+        comparisonConfirmed = new Intl.NumberFormat().format(countryInfo.getComparisonConfirmed(countries[0]));
+        comparisonRecovered = new Intl.NumberFormat().format(countryInfo.getComparisonRecovered(countries[0]));
+        comparisonDeaths = new Intl.NumberFormat().format(countryInfo.getComparisonDeaths(countries[0]));
+        comparisonVaccinations = new Intl.NumberFormat().format(countryInfo.getComparisonVaccinations(countries[0]));
 
         comparisonHTML = `
         <aside class="country__comparison__list-container">
@@ -295,19 +295,19 @@ const displayCountryCard = async function (countryInfo) {
                         <ul>
                             <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Confirmed</div>
-                                <div class="country__infections__list__item__value">${countryInfo.infectConfirmed}</div>
+                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectConfirmed)}</div>
                             </li>
                             <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Recovered</div>
-                                <div class="country__infections__list__item__value">${countryInfo.infectRecovered}</div>
+                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectRecovered)}</div>
                             </li>
                             <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Deaths</div>
-                                <div class="country__infections__list__item__value">${countryInfo.infectDeaths}</div>
+                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
                             </li>
                             <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Population</div>
-                                <div class="country__infections__list__item__value">${countryInfo.infectPopulation}</div>
+                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
                             </li>
                         </ul>
                     </div>
@@ -320,15 +320,15 @@ const displayCountryCard = async function (countryInfo) {
                         <ul>
                             <li class="country__vaccinations__list__item">
                                 <div class="country__vaccinations__list__item__reference">Administered</div>
-                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccAdministered}</div>
+                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
                             </li>
                             <li class="country__vaccinations__list__item">
                                 <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
-                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccPartially}</div>
+                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
                             </li>
                             <li class="country__vaccinations__list__item">
                                 <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
-                                <div class="country__vaccinations__list__item__value">${countryInfo.vaccFully}</div>
+                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
                             </li>
                         </ul>
                     </div>
