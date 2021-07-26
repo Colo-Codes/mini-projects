@@ -52,9 +52,6 @@ class CountryCard {
 
 function getCurrentCoords(pos) {
     var crd = pos.coords;
-    console.log(pos);
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
     spinnerSearchingCoords('off');
     getCountryName(crd.latitude, crd.longitude);
 }
@@ -90,7 +87,6 @@ const getCountryName = async function (lat, lng) {
         spinnerSearchingCountry('on');
         // Get country (reverse geocoding)
         const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
-        console.log(data);
         const userCountry = data.country;
 
         // Spinner off
@@ -257,6 +253,23 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
     });
 };
 
+const checkCountryLimitReached = function () {
+    // Prevent further countries from being added (4 countries maximum)
+    const searchButton = document.querySelector('.search-bar__btn');
+    const inputField = document.getElementById('search-bar__input__countryToSearch');
+    if (countries.length >= 4) {
+        inputField.disabled = true;
+        inputField.value = 'Country comparison limit reached';
+        searchButton.classList.add('hidden');
+    } else {
+        if (searchButton.classList.contains('hidden')) {
+            inputField.disabled = false;
+            inputField.value = '';
+            searchButton.classList.remove('hidden');
+        }
+    }
+};
+
 const displayCountryCard = async function (countryInfo) {
 
     let comparisonConfirmed;
@@ -383,7 +396,10 @@ const displayCountryCard = async function (countryInfo) {
     } catch (err) {
         displayErrorMessage('getting country flag', new Error(err));
     }
+
     addEventListenerToCardDeleteButton(countryInfo);
+
+    checkCountryLimitReached();
 }
 
 const hideResetButton = function () {
@@ -396,15 +412,9 @@ const displayResetButton = function () {
 
 const buildCountryCard = async function (country) {
     try {
-
         const countryInfo = new CountryCard(...await getCovid19Data(country));
-        console.log('countryInfo', countryInfo);
-
         countries.push(countryInfo);
-        console.log(countries);
-
         displayCountryCard(countryInfo);
-
         displayResetButton();
     } catch (err) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
@@ -415,13 +425,10 @@ const getCovid19Data = async function (country) {
     try {
 
         let countryCOVID19Data = []; // Array
-
         // Spinner on
         spinnerSearchingCOVID19Data('on');
-
         // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
         const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
-            console.log(data);
             countryCOVID19Data.push(data.All.country);
             countryCOVID19Data.push(data.All.confirmed);
             countryCOVID19Data.push(data.All.recovered);
@@ -430,17 +437,12 @@ const getCovid19Data = async function (country) {
         });
 
         const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
-            console.log(data);
             countryCOVID19Data.push(data.All.administered);
             countryCOVID19Data.push(data.All.people_partially_vaccinated);
             countryCOVID19Data.push(data.All.people_vaccinated);
         });
-
         // Spinner off
         spinnerSearchingCOVID19Data('off');
-
-        console.log('countryCOVID19Data:', countryCOVID19Data)
-
         return countryCOVID19Data;
     } catch (err) {
         displayErrorMessage('getting COVID-19 data', new Error(err));
@@ -455,8 +457,10 @@ const putCountryNameOnSearchBar = function (country) {
 
 // SECTION Event listeners
 
+// Automatic geolocation
 navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
 
+// Add new country button
 document.querySelector('.search-bar__btn').addEventListener('click', event => {
     event.preventDefault();
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
@@ -464,9 +468,12 @@ document.querySelector('.search-bar__btn').addEventListener('click', event => {
     buildCountryCard(countryToSearch);
 });
 
+// Reset button
 document.querySelector('.reset-btn').addEventListener('click', () => {
     document.querySelector('.reset-btn').classList.add('hidden');
     document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
+    countries.splice(0, countries.length);
+    checkCountryLimitReached();
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

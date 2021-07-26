@@ -136,6 +136,10 @@ html {
 #search-bar__input__countryToSearch:focus {
     outline: none; /* NOTE This might be bad for screen readers */
 }
+#search-bar__input__countryToSearch:disabled {
+    background-color: var(--color-white);
+    color: #8a1010;
+}
 
 /* SECTION Country cards */
 
@@ -471,7 +475,8 @@ footer {
 /* SECTION Hidden elements */
 
 .hidden {
-    opacity: 0;
+    /* opacity: 0; */
+    display: none;
 }
 /* SECTION Animations */
 
