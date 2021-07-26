@@ -52,44 +52,32 @@ class CountryCard {
 
 function getCurrentCoords(pos) {
     var crd = pos.coords;
-    spinnerSearchingCoords('off');
     getCountryName(crd.latitude, crd.longitude);
 }
 
-function getCurrentCoordsError(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-    /*
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      x.innerHTML = "User denied the request for Geolocation."
-      break;
-    case error.POSITION_UNAVAILABLE:
-      x.innerHTML = "Location information is unavailable."
-      break;
-    case error.TIMEOUT:
-      x.innerHTML = "The request to get user location timed out."
-      break;
-    case error.UNKNOWN_ERROR:
-      x.innerHTML = "An unknown error occurred."
-      break;
-  }
+function getCurrentCoordsError(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            displayErrorMessage('automatic geolocation', new Error('User denied the request for Geolocation'));
+            break;
+        case error.POSITION_UNAVAILABLE:
+            displayErrorMessage('automatic geolocation', new Error('Location information is unavailable.'));
+            break;
+        case error.TIMEOUT:
+            displayErrorMessage('automatic geolocation', new Error('The request to get user location timed out.'));
+            break;
+        case error.UNKNOWN_ERROR:
+            displayErrorMessage('automatic geolocation', new Error('An unknown error occurred.'));
+            break;
+    }
 }
-    */
-}
-
-
 
 const getCountryName = async function (lat, lng) {
     try {
-
-        // Spinner on
-        spinnerSearchingCountry('on');
         // Get country (reverse geocoding)
+        spinnerSearchingCountry('on');
         const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
         const userCountry = data.country;
-
-        // Spinner off
         spinnerSearchingCountry('off');
 
         // Handling possible error
@@ -241,15 +229,18 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
         countryCards.forEach((card, i) => {
             if (card.dataset.id === countryInfo.countryName) {
                 card.remove();
+                // Recalculate if deleted country is the first one
+                if (i === 0) {
+                    recalculateComparisons();
+                }
 
-                recalculateComparisons();
-
-                if (countryCards.length === 1) {
+                if (countryCards.length <= 1) {
                     hideResetButton();
                 }
             }
         });
 
+        checkCountryLimitReached();
     });
 };
 
@@ -424,10 +415,9 @@ const buildCountryCard = async function (country) {
 const getCovid19Data = async function (country) {
     try {
 
-        let countryCOVID19Data = []; // Array
-        // Spinner on
-        spinnerSearchingCOVID19Data('on');
         // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
+        let countryCOVID19Data = []; // Array
+        spinnerSearchingCOVID19Data('on');
         const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
             countryCOVID19Data.push(data.All.country);
             countryCOVID19Data.push(data.All.confirmed);
@@ -441,7 +431,6 @@ const getCovid19Data = async function (country) {
             countryCOVID19Data.push(data.All.people_partially_vaccinated);
             countryCOVID19Data.push(data.All.people_vaccinated);
         });
-        // Spinner off
         spinnerSearchingCOVID19Data('off');
         return countryCOVID19Data;
     } catch (err) {
@@ -456,6 +445,9 @@ const putCountryNameOnSearchBar = function (country) {
 }
 
 // SECTION Event listeners
+
+// Hide spinner
+document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
 
 // Automatic geolocation
 navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
@@ -495,24 +487,6 @@ const spinnerSearchingCountry = function (toggle) {
     }
 }
 
-const spinnerSearchingCoords = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for coordinates...";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}
-// Spinner on
-spinnerSearchingCoords('on');
-
 const spinnerSearchingCOVID19Data = function (toggle) {
     // Remove possible old message
     removeOldMessage();
@@ -521,22 +495,6 @@ const spinnerSearchingCOVID19Data = function (toggle) {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
         document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}
-
-const spinnerSearchingCountryCoords = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country coordinates...";
     }
     else {
         // Hide
