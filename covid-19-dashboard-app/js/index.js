@@ -84,34 +84,50 @@ function showError(error) {
 
 
 const getCountryName = async function (lat, lng) {
-    // Spinner on
-    spinnerSearchingCountry('on');
-    // Get country (reverse geocoding)
-    const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
-    console.log(data);
-    const userCountry = data.country;
+    try {
 
-    // const userCountry = 'Argentina';
-    console.log(userCountry);
+        // Spinner on
+        spinnerSearchingCountry('on');
+        // Get country (reverse geocoding)
+        const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
+        console.log(data);
+        const userCountry = data.country;
 
-    // Spinner off
-    spinnerSearchingCountry('off');
+        // Spinner off
+        spinnerSearchingCountry('off');
 
-    // Load country on search input
-    putCountryNameOnSearchBar(userCountry);
+        // Handling possible error
+        if (userCountry === undefined) {
+            displayErrorMessage('getting country name', new Error('Country name is undefined'));
+        } else {
+            // Load country on search input
+            putCountryNameOnSearchBar(userCountry);
+        }
+
+    } catch (err) {
+        displayErrorMessage('getting country name', new Error(err));
+    }
 }
 
 const getCountryFlag = async function (countryName) {
-    const flag = await fetch(`https://restcountries.eu/rest/v2/name/${countryName}`).then(res => res.json()).then(data => data[0].flag);
-    console.log('THIS IS THE FLAG:', flag);
-    return flag;
+    try {
+        const flag = await fetch(`https://restcountries.eu/rest/v2/name/${countryName}`).then(res => res.json()).then(data => data[0].flag);
+        return flag;
+    } catch (err) {
+        displayErrorMessage('calling API to get country flag', new Error(err));
+    }
 }
 
 const removeOldMessage = function () {
     // Remove possible old message
-    const oldMessage = document.querySelector('.message-success');
-    if (oldMessage) {
-        oldMessage.remove();
+    const oldSuccessMessage = document.querySelector('.message-success');
+    const oldErrorMessage = document.querySelector('.message-error');
+
+    if (oldSuccessMessage) {
+        oldSuccessMessage.remove();
+    }
+    if (oldErrorMessage) {
+        oldErrorMessage.remove();
     }
 }
 
@@ -126,7 +142,7 @@ const displayComparisonSuccessfullyUpdatedMessage = function () {
         <div class="message-success">
         <p>${countries.length > 1 ? `Comparison data updated. ` : ``}New reference country is ${countries[0].countryName}.</p>
         <div class="close-message-btn">
-        <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem"/>
+        <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem" id="success-message-close-btn"/>
         </div>
         </div>
         </div>
@@ -135,6 +151,26 @@ const displayComparisonSuccessfullyUpdatedMessage = function () {
         // Delete button event listener
         document.querySelector('.close-message-btn').addEventListener('click', () => document.querySelector('.message-success').remove());
     }
+};
+
+const displayErrorMessage = function (errorType, errorMessage) {
+    // Remove possible old message
+    removeOldMessage(); // FIXME
+
+    // Show new message
+    const errorMessageToDisplay = `
+        <div class="message-error-container">
+            <div class="message-error">
+                <p>Error in ${errorType} (${errorMessage.message}).</p>
+                <div class="close-message-btn">
+                    <img src="./img/delete.png" alt="Close card icon" width="0.625rem" height="0.625rem" id="error-message-close-btn"/>
+                </div>
+            </div>
+        </div>
+        `;
+    document.querySelector('.countries-container').insertAdjacentHTML('beforebegin', errorMessageToDisplay);
+    // Delete button event listener
+    document.querySelector('.close-message-btn').addEventListener('click', () => document.querySelector('.message-error').remove());
 };
 
 const recalculateComparisons = function () {
@@ -222,6 +258,7 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
 };
 
 const displayCountryCard = async function (countryInfo) {
+
     let comparisonConfirmed;
     let comparisonRecovered;
     let comparisonDeaths;
@@ -237,112 +274,115 @@ const displayCountryCard = async function (countryInfo) {
 
         comparisonHTML = `
         <aside class="country__comparison__list-container">
-                <div class="country__comparison__title">
-                    <h3>Comparison with first country</h3>
-                </div>
-                <ul>
+        <div class="country__comparison__title">
+        <h3>Comparison with first country</h3>
+        </div>
+        <ul>
                     <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Confirmed</div>
-                        <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                    <div class="country__comparison__list__item__reference">Confirmed</div>
+                    <div class="country__comparison__list__item__value">${(comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Recovered</div>
-                        <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                    <div class="country__comparison__list__item__reference">Recovered</div>
+                    <div class="country__comparison__list__item__value">${(comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
-                        <div class="country__comparison__list__item__reference">Deaths</div>
-                        <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                    <div class="country__comparison__list__item__reference">Deaths</div>
+                    <div class="country__comparison__list__item__value">${(comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
                         <div class="country__comparison__list__item__value">${(comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
-                    </li>
-                </ul>
+                        </li>
+                        </ul>
             </aside>
-
-        </article>
-        `;
+            
+            </article>
+            `;
     } else {
         // Render "Reference country" for first country card
         comparisonHTML = `
             <aside class="country__comparison__list-container">
                     <div class="country__comparison__title reference-country">
-                        <h3>Reference country</h3>
+                    <h3>Reference country</h3>
                     </div>
-            </aside>
-        
-        </article>
-        `;
+                    </aside>
+                    
+                    </article>
+                    `;
     }
 
     countryCardHTMLStructure = `
         <article class="full-country-data-container" data-id="${countryInfo.countryName}">
-            <main class="country-container">
-                <div class="close-card-btn">
-                    <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
+        <main class="country-container">
+        <div class="close-card-btn">
+        <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
                 </div>
                 <div class="country__flag-container">
                     <div class="country__flag__flag-empty"></div>
                     <div class="country__flag__title__container">
-                        <div class="country__flag__title">${countryInfo.countryName}</div>
+                    <div class="country__flag__title">${countryInfo.countryName}</div>
                     </div>
-                </div>
-                <div class="country__infections-container">
+                    </div>
+                    <div class="country__infections-container">
                     <div class="country__infections__title">
-                        <h3>COVID-19 infections</h3>
+                    <h3>COVID-19 infections</h3>
                     </div>
                     <div class="country__infections__list-container">
-                        <ul>
-                            <li class="country__infections__list__item">
-                                <div class="country__infections__list__item__reference">Confirmed</div>
-                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectConfirmed)}</div>
-                            </li>
-                            <li class="country__infections__list__item">
+                    <ul>
+                    <li class="country__infections__list__item">
+                    <div class="country__infections__list__item__reference">Confirmed</div>
+                    <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectConfirmed)}</div>
+                    </li>
+                    <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Recovered</div>
                                 <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectRecovered)}</div>
                             </li>
                             <li class="country__infections__list__item">
-                                <div class="country__infections__list__item__reference">Deaths</div>
-                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
+                            <div class="country__infections__list__item__reference">Deaths</div>
+                            <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
                             </li>
                             <li class="country__infections__list__item">
-                                <div class="country__infections__list__item__reference">Population</div>
-                                <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
+                            <div class="country__infections__list__item__reference">Population</div>
+                            <div class="country__infections__list__item__value">${new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
                             </li>
-                        </ul>
-                    </div>
+                            </ul>
+                            </div>
                 </div>
                 <div class="country__vaccinations-container">
-                    <div class="country__vaccinations__title">
-                        <h3>COVID-19 vaccinations</h3>
-                    </div>
+                <div class="country__vaccinations__title">
+                <h3>COVID-19 vaccinations</h3>
+                </div>
                     <div class="country__vaccinations__list-container">
                         <ul>
+                        <li class="country__vaccinations__list__item">
+                        <div class="country__vaccinations__list__item__reference">Administered</div>
+                        <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
+                        </li>
                             <li class="country__vaccinations__list__item">
-                                <div class="country__vaccinations__list__item__reference">Administered</div>
-                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
+                            <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
+                            <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
                             </li>
                             <li class="country__vaccinations__list__item">
-                                <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
-                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
+                            <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
+                            <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
                             </li>
-                            <li class="country__vaccinations__list__item">
-                                <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
-                                <div class="country__vaccinations__list__item__value">${new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </main>
-    `;
+                            </ul>
+                            </div>
+                            </div>
+                            </main>
+                            `;
 
     countryCardHTMLStructure += comparisonHTML;
 
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
+    try {
+        const flagContainers = document.querySelectorAll('.country__flag-container');
+        flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
 
-    const flagContainers = document.querySelectorAll('.country__flag-container');
-    flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
-
+    } catch (err) {
+        displayErrorMessage('getting country flag', new Error(err));
+    }
     addEventListenerToCardDeleteButton(countryInfo);
 }
 
@@ -355,46 +395,56 @@ const displayResetButton = function () {
 }
 
 const buildCountryCard = async function (country) {
-    const countryInfo = new CountryCard(...await getCovid19Data(country));
-    console.log('countryInfo', countryInfo);
+    try {
 
-    countries.push(countryInfo);
-    console.log(countries);
+        const countryInfo = new CountryCard(...await getCovid19Data(country));
+        console.log('countryInfo', countryInfo);
 
-    displayCountryCard(countryInfo);
+        countries.push(countryInfo);
+        console.log(countries);
 
-    displayResetButton();
+        displayCountryCard(countryInfo);
+
+        displayResetButton();
+    } catch (err) {
+        displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
+    }
 }
 
 const getCovid19Data = async function (country) {
-    let countryCOVID19Data = []; // Array
+    try {
 
-    // Spinner on
-    spinnerSearchingCOVID19Data('on');
+        let countryCOVID19Data = []; // Array
 
-    // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
-    const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
-        console.log(data);
-        countryCOVID19Data.push(data.All.country);
-        countryCOVID19Data.push(data.All.confirmed);
-        countryCOVID19Data.push(data.All.recovered);
-        countryCOVID19Data.push(data.All.deaths);
-        countryCOVID19Data.push(data.All.population);
-    });
+        // Spinner on
+        spinnerSearchingCOVID19Data('on');
 
-    const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
-        console.log(data);
-        countryCOVID19Data.push(data.All.administered);
-        countryCOVID19Data.push(data.All.people_partially_vaccinated);
-        countryCOVID19Data.push(data.All.people_vaccinated);
-    });
+        // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
+        const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
+            console.log(data);
+            countryCOVID19Data.push(data.All.country);
+            countryCOVID19Data.push(data.All.confirmed);
+            countryCOVID19Data.push(data.All.recovered);
+            countryCOVID19Data.push(data.All.deaths);
+            countryCOVID19Data.push(data.All.population);
+        });
 
-    // Spinner off
-    spinnerSearchingCOVID19Data('off');
+        const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
+            console.log(data);
+            countryCOVID19Data.push(data.All.administered);
+            countryCOVID19Data.push(data.All.people_partially_vaccinated);
+            countryCOVID19Data.push(data.All.people_vaccinated);
+        });
 
-    console.log('countryCOVID19Data:', countryCOVID19Data)
+        // Spinner off
+        spinnerSearchingCOVID19Data('off');
 
-    return countryCOVID19Data;
+        console.log('countryCOVID19Data:', countryCOVID19Data)
+
+        return countryCOVID19Data;
+    } catch (err) {
+        displayErrorMessage('getting COVID-19 data', new Error(err));
+    }
 }
 
 // SECTION Search country
