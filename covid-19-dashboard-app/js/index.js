@@ -143,7 +143,7 @@ const getCountryName = async function (lat, lng) {
 
         // Handling possible error
         if (userCountry === undefined) {
-            displayErrorMessage('getting country name', new Error('Country name is undefined'));
+            displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed'));
         } else {
             // Display country card
             await buildCountryCard(userCountry);
