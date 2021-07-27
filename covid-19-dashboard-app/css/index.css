@@ -175,7 +175,8 @@ html {
     flex-wrap: wrap; /* For mobile */
     margin-top: 7rem;
 }
-.close-card-btn {
+.close-card-btn,
+.close-card-btn:active {
     margin: -0.75rem -19.5rem 0 0;
     width: 1.5rem;
     height: 1.5rem;
