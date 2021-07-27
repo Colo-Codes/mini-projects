@@ -100,7 +100,7 @@ html {
 .title-container {
     padding: 1rem 0;
     text-align: center;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: rgba(255, 255, 255, 0.5);
 }
 
@@ -111,7 +111,7 @@ html {
 /* SECTION Search bar */
 
 .search-bar-container {
-    width: 27.5rem;
+    width: 23rem;
     height: 2.5rem;
     display: flex;
     align-items: center;
@@ -153,7 +153,7 @@ html {
     height: 2.5rem;
     font-family: var(--font);
     font-weight: 100;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #9e9e9e;
     border: 0;
     padding-left: 0.5rem;
@@ -683,18 +683,11 @@ footer img:hover {
     .title-container {
         margin-top: -3.125rem;
         padding: 1rem 0;
-        text-align: center;
-        font-size: 1.7rem;
-        color: rgba(255, 255, 255, 0.5);
     }
     .search-bar-container {
         width: 37.5rem;
-        height: 2.5rem;
-        display: flex;
-        align-items: center;
-        background-color: var(--color-white);
-        margin: 0 auto;
-        border-radius: 1.25rem;
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    #search-bar__input__countryToSearch {
+        font-size: 1.2rem;
     }
 }
