@@ -98,11 +98,9 @@ html {
 /* SECTION Title */
 
 .title-container {
-    margin-top: -3.125rem;
     padding: 1rem 0;
     text-align: center;
-    font-size: 1.7rem;
-
+    font-size: 1.25rem;
     color: rgba(255, 255, 255, 0.5);
 }
 
@@ -681,7 +679,14 @@ footer img:hover {
 700px -> shrink 
 */
 
-@media (min-width: 700px) {
+@media (min-width: 800px) {
+    .title-container {
+        margin-top: -3.125rem;
+        padding: 1rem 0;
+        text-align: center;
+        font-size: 1.7rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
     .search-bar-container {
         width: 37.5rem;
         height: 2.5rem;
