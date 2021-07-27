@@ -111,7 +111,7 @@ html {
 /* SECTION Search bar */
 
 .search-bar-container {
-    width: 23rem;
+    width: 21rem;
     height: 2.5rem;
     display: flex;
     align-items: center;
@@ -152,11 +152,10 @@ html {
     width: 100%;
     height: 2.5rem;
     font-family: var(--font);
-    font-weight: 100;
     font-size: 1rem;
-    color: #9e9e9e;
+    color: var(--color-light-green);
     border: 0;
-    padding-left: 0.5rem;
+    padding-left: 0.2rem;
 }
 #search-bar__input__countryToSearch:focus {
     outline: none; /* NOTE This might be bad for screen readers */

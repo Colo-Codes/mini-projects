@@ -309,13 +309,15 @@ const checkCountryLimitReached = function (forceLimit = 0, country = '') {
     const inputField = document.getElementById('search-bar__input__countryToSearch');
     if (countries.length >= 4 || forceLimit === 1) {
         inputField.disabled = true;
-        !(forceLimit === 1) ? inputField.value = 'Country comparison limit reached' : inputField.value = 'Country being acquired...';
+        !(forceLimit === 1) ? inputField.value = 'Country limit reached' : inputField.value = 'Fetching country...';
         searchButton.classList.add('hidden');
+        searchButton.style.display = 'none'; //FIXME
     } else {
         if (searchButton.classList.contains('hidden')) {
             inputField.disabled = false;
             inputField.value = country;
             searchButton.classList.remove('hidden');
+            searchButton.style.display = 'initial';//FIXME
         }
     }
 };
@@ -465,6 +467,7 @@ const displayResetButton = function () {
 const buildCountryCard = async function (country) {
     try {
         const countryInfo = new CountryCard(...await getCovid19Data(country));
+        checkCountryLimitReached(0);
         countries.push(countryInfo);
         displayCountryCard(countryInfo);
         displayResetButton();
@@ -536,9 +539,9 @@ document.querySelector('.search-bar__btn').addEventListener('click', event => {
     if (countriesListArr.indexOf(countryToSearch) === -1) { // FIXME await until array is actually built to prevent errors
         displayErrorMessage('country name', new Error('Country name not found'));
     } else {
+        checkCountryLimitReached(1);
         buildCountryCard(countryToSearch);
     }
-    document.querySelector('#search-bar__input__countryToSearch').value = '';
 });
 
 // Add current country button
