@@ -113,7 +113,7 @@ html {
 /* SECTION Search bar */
 
 .search-bar-container {
-    width: 37.5rem;
+    width: 27.5rem;
     height: 2.5rem;
     display: flex;
     align-items: center;
@@ -173,6 +173,7 @@ html {
 .countries-container {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* For mobile */
     margin-top: 7rem;
 }
 .close-card-btn {
@@ -349,6 +350,7 @@ html {
 }
 .reference-country {
     border-radius: 0 0 5px 5px;
+    margin-bottom: 4rem;
 }
 .country__comparison__title h3 {
     font-weight: normal;
@@ -371,6 +373,7 @@ html {
 .country__comparison__list__item:last-of-type {
     border-bottom: none;
     border-radius: 0 0 5px 5px;
+    margin-bottom: 4rem;
 }
 .country__comparison__list__item:hover {
     background-color: #1c353f;
@@ -420,7 +423,7 @@ html {
     width: 13rem;
     height: 2.5rem;
     background-color: var(--color-white);
-    margin: 4rem auto 15rem auto;
+    margin: 1rem auto 15rem auto;
     border-radius: 20px;
     border: none;
     box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
@@ -671,4 +674,22 @@ footer img:hover {
     transform: translateY(-0.2rem);
     filter: invert(51%) sepia(58%) saturate(463%) hue-rotate(123deg)
         brightness(89%) contrast(92%) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* SECTION Mobile first */
+/*
+700px -> shrink 
+*/
+
+@media (min-width: 700px) {
+    .search-bar-container {
+        width: 37.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        background-color: var(--color-white);
+        margin: 0 auto;
+        border-radius: 1.25rem;
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
+    }
 }
