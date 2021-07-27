@@ -152,7 +152,8 @@ const getCountryName = async function (lat, lng) {
         // Allow user to enter a country on search box input
         checkCountryLimitReached(0);
     } catch (err) {
-        displayErrorMessage('getting country name', new Error(err));
+        // displayErrorMessage('getting country name', new Error(err));
+        displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed'));
         // Allow user to enter a country on search box input
         checkCountryLimitReached(0);
     }
