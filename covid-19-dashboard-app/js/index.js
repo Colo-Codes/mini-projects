@@ -54,7 +54,7 @@ const spinnerSearchingUserLocation = function (toggle) {
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching user location...";
+        document.querySelector('.spinner-legend').textContent = "Searching user location";
     }
     else {
         // Hide
@@ -70,7 +70,7 @@ const spinnerSearchingCountry = function (toggle) {
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country...";
+        document.querySelector('.spinner-legend').textContent = "Searching for country";
     }
     else {
         // Hide
@@ -86,13 +86,24 @@ const spinnerSearchingCOVID19Data = function (toggle) {
     if (toggle === 'on') {
         // Show
         document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data...";
+        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data";
     }
     else {
         // Hide
         document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
         document.querySelector('.spinner-legend').textContent = "";
     }
+}
+
+const successCheck = function () {
+    const greenCheck = document.createElement('div');
+    greenCheck.innerHTML = `
+        <div class="green-check"><img src="./img/checked.png"></div>
+    `;
+    document.querySelector('.spinner').insertAdjacentElement('afterend', greenCheck);
+    setTimeout(() => {
+        document.querySelector('.green-check').remove();
+    }, 3000); // Must be in sync with fadeInAndOut CSS animation
 }
 
 // SECTION Get user location
@@ -517,6 +528,7 @@ const getCovid19Data = async function (country) {
     }
 
     spinnerSearchingCOVID19Data('off');
+    successCheck();
     return countryCOVID19Data;
 }
 

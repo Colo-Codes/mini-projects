@@ -100,12 +100,12 @@ html {
 .title-container {
     padding: 1rem 0;
     text-align: center;
-    font-size: 1rem;
     color: rgba(255, 255, 255, 0.5);
 }
 
 .title-container h1 {
-    font-weight: 900;
+    font-size: 1.97rem;
+    font-weight: 700;
 }
 
 /* SECTION Search bar */
@@ -128,7 +128,8 @@ html {
 .search-bar__btn-container {
     width: 12.5rem;
 }
-.search-bar__btn {
+.search-bar__btn,
+.search-bar__btn:active {
     background-color: var(--color-light-green);
     width: 100%;
     height: 2.5rem;
@@ -140,7 +141,8 @@ html {
     transition: all 0.2s;
 }
 /* .search-bar__btn:focus, */
-.search-bar__btn:hover {
+.search-bar__btn:hover,
+.search-bar__btn:focus {
     background-color: var(--color-dark-green);
     cursor: pointer;
 }
@@ -191,7 +193,8 @@ html {
     filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
         brightness(95%) contrast(95%);
 }
-.close-card-btn:hover {
+.close-card-btn:hover,
+.close-card-btn:focus {
     transform: scale(1.5, 1.5);
     box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.3);
 }
@@ -384,6 +387,7 @@ html {
 }
 .spinner {
     position: absolute;
+    max-width: 90%; /* For mobile */
     display: flex;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
@@ -411,6 +415,28 @@ html {
 .spinner .bounce2 {
     animation-delay: -0.16s;
 }
+.green-check {
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    background-color: #dff2bf;
+    border-radius: 5px;
+    color: #4f8a10;
+    margin-top: 2rem;
+    font-size: 1rem;
+    box-shadow: 0px 5px 20px 3px rgba(0, 0, 0, 0.3);
+    animation: fadeInAndOut 3s; /* Must be in sync with successCheck JavaScript function */
+}
+.green-check img {
+    display: block;
+    position: relative;
+    top: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    margin: auto;
+    filter: invert(39%) sepia(49%) saturate(4849%) hue-rotate(64deg)
+        brightness(99%) contrast(87%);
+}
 
 /* SECTION Reset */
 
@@ -431,7 +457,9 @@ html {
 }
 
 .reset-btn:hover,
-.add-current-country-btn:hover {
+.reset-btn:focus,
+.add-current-country-btn:hover,
+.add-current-country-btn:focus {
     background-color: var(--color-dark-green);
     color: var(--color-white);
     cursor: pointer;
@@ -448,6 +476,7 @@ html {
 .message-success,
 .message-error {
     position: absolute;
+    max-width: 90%; /* For mobile */
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
@@ -484,7 +513,8 @@ html {
     height: 0.75rem;
     margin: 0.35rem auto;
 }
-.close-message-btn:hover {
+.close-message-btn:hover,
+.close-message-btn:focus {
     transform: scale(1.5, 1.5);
 }
 #success-message-close-btn {
@@ -564,6 +594,66 @@ html {
     }
 }
 
+/* fadeInAndOut */
+@keyframes fadeInAndOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes fadeInAndOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes fadeInAndOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-o-keyframes fadeInAndOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-ms-keyframes fadeInAndOut {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
 /* slideIn */
 @keyframes slideIn {
     0% {
@@ -682,6 +772,11 @@ footer img:hover {
     .title-container {
         margin-top: -3.125rem;
         padding: 1rem 0;
+    }
+
+    .title-container h1 {
+        font-weight: 900;
+        font-size: 3.4rem;
     }
     .search-bar-container {
         width: 37.5rem;
