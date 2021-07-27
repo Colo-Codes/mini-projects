@@ -481,6 +481,7 @@ html {
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+    margin-bottom: 2rem; /* Keep margins separated */
     padding: 1rem;
     width: fit-content;
     font-size: 0.85rem;
@@ -784,5 +785,9 @@ footer img:hover {
     }
     #search-bar__input__countryToSearch {
         font-size: 1.2rem;
+    }
+    .message-success,
+    .message-error {
+        margin-bottom: 0; /* Keep margins separated */
     }
 }
