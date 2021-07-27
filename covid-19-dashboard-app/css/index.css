@@ -21,6 +21,7 @@ html {
 :root {
     --color-light-green: #2a9d8f;
     --color-dark-green: #264653;
+    --color-background: #96a5ac;
     --color-white: #fff;
     --font: 'Montserrat', sans-serif;
 }
@@ -32,7 +33,7 @@ html {
     /* height: 100vh; */
     min-height: 100%;
     position: absolute;
-    background-color: rgba(38, 70, 83, 0.8);
+    background-color: var(--color-background);
     z-index: -20;
 }
 /* NOTE: Adding a 'filter: blur()' to the image added an ugly white border on it, so I found an alternative using 'backdrop-filter', although it's not fully supported */
@@ -419,7 +420,7 @@ html {
     width: 13rem;
     height: 2.5rem;
     background-color: var(--color-white);
-    margin: 4rem auto 0 auto;
+    margin: 4rem auto 15rem auto;
     border-radius: 20px;
     border: none;
     box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
@@ -434,12 +435,6 @@ html {
     background-color: var(--color-dark-green);
     color: var(--color-white);
     cursor: pointer;
-}
-
-/* SECTION Footer */
-
-footer {
-    height: 2rem;
 }
 
 /* SECTION Messages */
@@ -645,4 +640,35 @@ footer {
 .autocomplete-active {
     background-color: DodgerBlue !important;
     color: var(--color-white);
+}
+
+/* SECTION Footer */
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    color: var(--color-dark-green);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+footer a {
+    color: var(--color-light-green);
+}
+footer a:hover {
+    text-decoration: underline dashed;
+    color: var(--color-dark-green);
+}
+footer img {
+    filter: invert(51%) sepia(58%) saturate(463%) hue-rotate(123deg)
+        brightness(89%) contrast(92%);
+    margin: 0.5rem 0 1rem 0;
+    transition: all 0.2s;
+}
+footer img:hover {
+    transform: translateY(-0.2rem);
+    filter: invert(51%) sepia(58%) saturate(463%) hue-rotate(123deg)
+        brightness(89%) contrast(92%) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
 }
