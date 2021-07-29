@@ -778,6 +778,28 @@ footer img:hover {
         brightness(89%) contrast(92%) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
 }
 
+/* SECTION Calculations information */
+
+[class^='calculations-information__']:not(.calculations-information__info-icon) {
+    width: 14rem;
+    height: 4rem;
+    font-size: 0.7rem;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--shadow-message-box);
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 150;
+}
+
+.calculations-information__info-icon {
+    width: 1rem;
+    filter: invert(48%) sepia(65%) saturate(410%) hue-rotate(123deg)
+        brightness(95%) contrast(95%);
+    margin-left: 0.5rem;
+}
+
 /* SECTION Mobile first */
 
 @media (min-width: 800px) {

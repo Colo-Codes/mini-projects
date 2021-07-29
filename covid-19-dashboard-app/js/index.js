@@ -343,19 +343,19 @@ const displayCountryCard = async function (countryInfo) {
         <ul>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Confirmed</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Recovered</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Deaths</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
-                        <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%'}</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                         </li>
                         </ul>
             </aside>
@@ -456,12 +456,55 @@ const displayResetButton = function () {
     document.querySelector('.reset-btn').classList.remove('hidden');
 }
 
+const showCalculationInformation = function (country) {
+    if (countries.length < 2)
+        return;
+    // Calculations information
+    const countryCards = document.querySelectorAll('.full-country-data-container');
+    countryCards.forEach((card, i) => {
+        if (card.dataset.id === country) {
+            const liElements = document.querySelectorAll('.full-country-data-container')[i].children[1].children[1].children;
+            for (const [key, element] of Object.entries(liElements)) {
+                console.log(element.children[1].lastChild);
+                let infoIcon = element.children[1].lastChild;
+
+                const infoMessage = document.querySelector(`.calculations-information__${key}`);
+                infoIcon.addEventListener('mouseenter', e => {
+                    infoMessage.style.top = `${e.clientY - (4 * 16) + window.scrollY}px`; // 16px = 1rem
+                    infoMessage.style.left = `${e.clientX - (14 * 16) + window.scrollX}px`; // 16px = 1rem
+                    infoMessage.classList.remove('hidden');
+                });
+                infoIcon.addEventListener('mouseleave', () => {
+                    infoMessage.classList.add('hidden');
+                });
+
+            }
+            // document.querySelectorAll('.full-country-data-container')[2].children[1].children[1].children[0].children[1].lastChild
+        }
+    });
+
+    // document.querySelectorAll('.calculations-information__info-icon').forEach((infoIcon, i) => {
+    //     const infoMessage = document.querySelector(`.calculations-information__${i}`);
+    //     infoIcon.addEventListener('mouseenter', e => {
+    //         infoMessage.style.top = `${e.clientY - (4 * 16) + window.scrollY}px`; // 16px = 1rem
+    //         infoMessage.style.left = `${e.clientX - (14 * 16) + window.scrollX}px`; // 16px = 1rem
+    //         infoMessage.classList.remove('hidden');
+    //     });
+    //     infoIcon.addEventListener('mouseleave', () => {
+    //         infoMessage.classList.add('hidden');
+    //     });
+    // });
+}
+
 const buildCountryCard = async function (country) {
     try {
         const countryInfo = new CountryCard(...await getCovid19Data(country));
         checkCountryLimitReached(0);
         countries.push(countryInfo);
         displayCountryCard(countryInfo);
+
+        showCalculationInformation(country);
+
         displayResetButton();
     } catch (err) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
