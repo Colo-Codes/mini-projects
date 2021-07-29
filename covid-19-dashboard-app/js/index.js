@@ -2,19 +2,13 @@
 
 'use strict';
 
-// TODO Prevent the same country from being added twice
-
 // SECTION Global variables
 
 let countries = [];
+let countriesListArr = [];
+let userDefinedNumberFormat;
 
-const currentGeolocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-};
-
-// SECTION CountryCard Class
+// SECTION Classes
 
 class CountryCard {
     constructor(countryName, infectConfirmed, infectRecovered, infectDeaths, infectPopulation, vaccAdministered, vaccPartially, vaccFully) {
@@ -42,75 +36,37 @@ class CountryCard {
     }
 }
 
-// SECTION spinners
-// FIXME make one function and use input parameters to select desired outcome
-const spinnerSearchingUserLocation = function (toggle) {
-    // Remove possible old message
+// SECTION Functions
+
+const toggleSpinner = function (typeOfSearch, toggle) {
     removeOldMessage();
-
+    const spinner = document.querySelector('.spinner');
+    const spinnerLegend = document.querySelector('.spinner-legend');
     if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching user location";
+        spinner.setAttribute("style", "opacity: 1;");
+        spinnerLegend.textContent = `Searching for ${typeOfSearch}`;
     }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}
-
-const spinnerSearchingCountry = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for country";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
-    }
-}
-
-const spinnerSearchingCOVID19Data = function (toggle) {
-    // Remove possible old message
-    removeOldMessage();
-
-    if (toggle === 'on') {
-        // Show
-        document.querySelector('.spinner').setAttribute("style", "opacity: 1;");
-        document.querySelector('.spinner-legend').textContent = "Searching for COVID-19 data";
-    }
-    else {
-        // Hide
-        document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-        document.querySelector('.spinner-legend').textContent = "";
+    if (toggle === 'off') {
+        spinner.setAttribute("style", "opacity: 0;");
+        spinnerLegend.textContent = "";
     }
 }
 
 const successCheck = function () {
     const greenCheck = document.createElement('div');
-    greenCheck.innerHTML = `
-        <div class="green-check"><img src="./img/checked.png"></div>
-    `;
+    greenCheck.innerHTML = `<div class="green-check"><img src="./img/checked.png"></div>`;
     document.querySelector('.spinner').insertAdjacentElement('afterend', greenCheck);
     setTimeout(() => {
         document.querySelector('.green-check').remove();
     }, 3000); // Must be in sync with fadeInAndOut CSS animation
 }
 
-// SECTION Get user location
-
-function getCurrentCoords(pos) {
+function getUserCoords(pos) {
     const crd = pos.coords;
     getCountryName(crd.latitude, crd.longitude);
 }
 
-function getCurrentCoordsError(error) {
+function getUserCoordsError(error) {
     switch (error.code) {
         case error.PERMISSION_DENIED:
             displayErrorMessage('automatic geolocation', new Error('User denied the request for Geolocation'));
@@ -125,18 +81,18 @@ function getCurrentCoordsError(error) {
             displayErrorMessage('automatic geolocation', new Error('An unknown error occurred'));
             break;
     }
-    spinnerSearchingUserLocation('off');
+    toggleSpinner('user location', 'off');
     // Allow user to enter a country on search box input
-    checkCountryLimitReached(0);
+    lockCountrySearch('off');
 }
 
 const getCountryName = async function (lat, lng) {
     try {
         // Get country (reverse geocoding)
-        spinnerSearchingCountry('on');
+        toggleSpinner('country', 'on');
         const data = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`).then(res => res.json()).then(data => data);
         const userCountry = data.country;
-        spinnerSearchingCountry('off');
+        toggleSpinner('country', 'off');
 
         // Handling possible error
         if (userCountry === undefined) {
@@ -147,12 +103,12 @@ const getCountryName = async function (lat, lng) {
             document.querySelector('#search-bar__input__countryToSearch').value = '';
         }
         // Allow user to enter a country on search box input
-        checkCountryLimitReached(0);
+        lockCountrySearch('off');
     } catch (err) {
         // displayErrorMessage('getting country name', new Error(err));
         displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed. Please reload the page and try again.'));
         // Allow user to enter a country on search box input
-        checkCountryLimitReached(0);
+        lockCountrySearch('off');
     }
 }
 
@@ -245,19 +201,19 @@ const recalculateComparisons = function () {
                     <ul>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Confirmed</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : ((comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : ((comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%')}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Recovered</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : ((comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : ((comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%')}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Deaths</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : ((comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : ((comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%')}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Vaccinations</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : ((comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : ((comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%')}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                         </li>
                     </ul>
                     </aside>
@@ -266,6 +222,8 @@ const recalculateComparisons = function () {
             comparisonContainer.insertAdjacentHTML('afterend', comparisonContainerUpdated);
             // Delete old container
             comparisonContainer.remove();
+
+            showCalculationInformation(countries[i].countryName);
         }
     });
     // Display message about updated data
@@ -297,7 +255,7 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
                 }
             }
         });
-        checkCountryLimitReached();
+        lockCountrySearch();
         if (countries.length === 0) {
             // Show 'Add my current country' button
             document.querySelector('.add-current-country-btn').classList.remove('hidden');
@@ -305,139 +263,137 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
     });
 };
 
-const checkCountryLimitReached = function (forceLimit = 0, country = '') {
+const lockCountrySearch = function (toggleLock = 'off', country = '') {
     // Prevent further countries from being added (4 countries maximum)
     const searchButton = document.querySelector('.search-bar__btn');
     const inputField = document.getElementById('search-bar__input__countryToSearch');
-    if (countries.length >= 4 || forceLimit === 1) {
+    if (toggleLock === 'on' || countries.length >= 4) {
         inputField.disabled = true;
-        !(forceLimit === 1) ? inputField.value = 'Country limit reached' : inputField.value = 'Fetching country...';
+        (toggleLock === 'off') ? inputField.value = 'Country limit reached' : inputField.value = 'Fetching country...';
         searchButton.classList.add('hidden');
-    } else {
-        if (searchButton.classList.contains('hidden')) {
-            inputField.disabled = false;
-            inputField.value = country;
-            searchButton.classList.remove('hidden');
-        }
+        return;
+    }
+    if (toggleLock === 'off') {
+        inputField.disabled = false;
+        inputField.value = country;
+        searchButton.classList.remove('hidden');
     }
 };
 
 const displayCountryCard = async function (countryInfo) {
-    let comparisonConfirmed;
-    let comparisonRecovered;
-    let comparisonDeaths;
-    let comparisonVaccinations;
     let countryCardHTMLStructure;
     let comparisonHTML;
 
     if (countries.length > 1) {
-        comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
-        comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
-        comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
-        comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
+        const comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
+        const comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
+        const comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
+        const comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
         comparisonHTML = `
-        <aside class="country__comparison__list-container">
-        <div class="country__comparison__title">
-        <h3>Comparison with first country</h3>
-        </div>
-        <ul>
+            <aside class="country__comparison__list-container">
+                <div class="country__comparison__title">
+                    <h3>Comparison with first country</h3>
+                </div>
+                <ul>
                     <li class="country__comparison__list__item">
-                    <div class="country__comparison__list__item__reference">Confirmed</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
+                        <div class="country__comparison__list__item__reference">Confirmed</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
-                    <div class="country__comparison__list__item__reference">Recovered</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
+                        <div class="country__comparison__list__item__reference">Recovered</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
-                    <div class="country__comparison__list__item__reference">Deaths</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
+                        <div class="country__comparison__list__item__reference">Deaths</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
                         <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%'}<img src="./img/information.png" class="calculations-information__info-icon"></div>
-                        </li>
-                        </ul>
+                    </li>
+                </ul>
             </aside>
             
             </article>
-            `;
-    } else {
+        `;
+    };
+    if (countries.length <= 1) {
         // Render "Reference country" for first country card
         comparisonHTML = `
             <aside class="country__comparison__list-container">
-                    <div class="country__comparison__title reference-country">
+                <div class="country__comparison__title reference-country">
                     <h3>Reference country</h3>
-                    </div>
-                    </aside>
-                    
-                    </article>
-                    `;
+                </div>
+            </aside>
+            
+            </article>
+        `;
     }
 
     countryCardHTMLStructure = `
         <article class="full-country-data-container" data-id="${countryInfo.countryName === undefined ? 'Name-not-found' : countryInfo.countryName}">
         <main class="country-container">
-        <div class="close-card-btn">
-        <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
-                </div>
-                <div class="country__flag-container">
-                    <div class="country__flag__flag-empty"></div>
+            <div class="close-card-btn">
+                <img src="./img/delete.png" alt="Close card icon" width="16px" height="16px"/>
+            </div>
+            <div class="country__flag-container">
+                <div class="country__flag__flag-empty"></div>
                     <div class="country__flag__title__container">
                     <div class="country__flag__title">${countryInfo.countryName === undefined ? 'Name not found' : countryInfo.countryName}</div>
-                    </div>
-                    </div>
-                    <div class="country__infections-container">
-                    <div class="country__infections__title">
+                </div>
+            </div>
+            <div class="country__infections-container">
+                <div class="country__infections__title">
                     <h3>COVID-19 infections</h3>
-                    </div>
-                    <div class="country__infections__list-container">
+                </div>
+                <div class="country__infections__list-container">
                     <ul>
-                    <li class="country__infections__list__item">
-                    <div class="country__infections__list__item__reference">Confirmed</div>
-                    <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectConfirmed) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectConfirmed)
-        }</div>
-                    </li >
-                    <li class="country__infections__list__item">
-                                <div class="country__infections__list__item__reference">Recovered</div>
-                                <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectRecovered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectRecovered)}</div>
-                            </li>
-                            <li class="country__infections__list__item">
+                        <li class="country__infections__list__item">
+                            <div class="country__infections__list__item__reference">Confirmed</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectConfirmed) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectConfirmed)}</div>
+                        </li >
+                        <li class="country__infections__list__item">
+                            <div class="country__infections__list__item__reference">Recovered</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectRecovered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectRecovered)}</div>
+                        </li>
+                        <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Deaths</div>
                             <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectDeaths) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectDeaths)}</div>
-                            </li>
-                            <li class="country__infections__list__item">
+                        </li>
+                        <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Population</div>
                             <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectPopulation) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectPopulation)}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+                <div class="country__vaccinations-container">
+                    <div class="country__vaccinations__title">
+                        <h3>COVID-19 vaccinations</h3>
+                    </div>
+                    <div class="country__vaccinations__list-container">
+                        <ul>
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Administered</div>
+                                <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccAdministered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccAdministered)}</div>
                             </li>
-                            </ul >
-                            </div >
-                </div >
-    <div class="country__vaccinations-container">
-        <div class="country__vaccinations__title">
-            <h3>COVID-19 vaccinations</h3>
-        </div>
-        <div class="country__vaccinations__list-container">
-            <ul>
-                <li class="country__vaccinations__list__item">
-                    <div class="country__vaccinations__list__item__reference">Administered</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccAdministered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccAdministered)}</div>
-                </li>
-                <li class="country__vaccinations__list__item">
-                    <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccPartially) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccPartially)}</div>
-                </li>
-                <li class="country__vaccinations__list__item">
-                    <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccFully) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccFully)}</div>
-                </li>
-            </ul>
-        </div>
-    </div>
-                            </main >
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
+                                <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccPartially) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccPartially)}</div>
+                            </li>
+                            <li class="country__vaccinations__list__item">
+                                <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
+                                <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccFully) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccFully)}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+        </main >
     `;
+
     countryCardHTMLStructure += comparisonHTML;
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
+
     try {
         const flagContainers = document.querySelectorAll('.country__flag-container');
         flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
@@ -445,16 +401,16 @@ const displayCountryCard = async function (countryInfo) {
         displayErrorMessage('getting country flag', new Error(err));
     }
     addEventListenerToCardDeleteButton(countryInfo);
-    checkCountryLimitReached();
-}
+    lockCountrySearch();
+};
 
 const hideResetButton = function () {
     document.querySelector('.reset-btn').classList.add('hidden');
-}
+};
 
 const displayResetButton = function () {
     document.querySelector('.reset-btn').classList.remove('hidden');
-}
+};
 
 const showCalculationInformation = function (country) {
     if (countries.length < 2)
@@ -464,11 +420,9 @@ const showCalculationInformation = function (country) {
     countryCards.forEach((card, i) => {
         if (card.dataset.id === country) {
             const liElements = document.querySelectorAll('.full-country-data-container')[i].children[1].children[1].children;
-            for (const [key, element] of Object.entries(liElements)) {
-                console.log(element.children[1].lastChild);
-                let infoIcon = element.children[1].lastChild;
-
-                const infoMessage = document.querySelector(`.calculations-information__${key}`);
+            for (const [j, liItem] of Object.entries(liElements)) {
+                let infoIcon = liItem.children[1].lastChild;
+                const infoMessage = document.querySelector(`.calculations-information__${j}`);
                 infoIcon.addEventListener('mouseenter', e => {
                     infoMessage.style.top = `${e.clientY - (4 * 16) + window.scrollY}px`; // 16px = 1rem
                     infoMessage.style.left = `${e.clientX - (14 * 16) + window.scrollX}px`; // 16px = 1rem
@@ -477,34 +431,18 @@ const showCalculationInformation = function (country) {
                 infoIcon.addEventListener('mouseleave', () => {
                     infoMessage.classList.add('hidden');
                 });
-
             }
-            // document.querySelectorAll('.full-country-data-container')[2].children[1].children[1].children[0].children[1].lastChild
         }
     });
-
-    // document.querySelectorAll('.calculations-information__info-icon').forEach((infoIcon, i) => {
-    //     const infoMessage = document.querySelector(`.calculations-information__${i}`);
-    //     infoIcon.addEventListener('mouseenter', e => {
-    //         infoMessage.style.top = `${e.clientY - (4 * 16) + window.scrollY}px`; // 16px = 1rem
-    //         infoMessage.style.left = `${e.clientX - (14 * 16) + window.scrollX}px`; // 16px = 1rem
-    //         infoMessage.classList.remove('hidden');
-    //     });
-    //     infoIcon.addEventListener('mouseleave', () => {
-    //         infoMessage.classList.add('hidden');
-    //     });
-    // });
-}
+};
 
 const buildCountryCard = async function (country) {
     try {
         const countryInfo = new CountryCard(...await getCovid19Data(country));
-        checkCountryLimitReached(0);
+        lockCountrySearch('off');
         countries.push(countryInfo);
         displayCountryCard(countryInfo);
-
         showCalculationInformation(country);
-
         displayResetButton();
     } catch (err) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
@@ -516,104 +454,25 @@ const buildCountryCard = async function (country) {
 const getCovid19Data = async function (country) {
     // Get COVID-19 API data (https://github.com/M-Media-Group/Covid-19-API)
     let countryCOVID19Data = [];
-    spinnerSearchingCOVID19Data('on');
+    toggleSpinner('COVID-19 data', 'on');
     try {
         const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
-            countryCOVID19Data.push(data.All.country);
-            countryCOVID19Data.push(data.All.confirmed);
-            countryCOVID19Data.push(data.All.recovered);
-            countryCOVID19Data.push(data.All.deaths);
-            countryCOVID19Data.push(data.All.population);
+            countryCOVID19Data.push(data.All.country, data.All.confirmed, data.All.recovered, data.All.deaths, data.All.population);
         });
     } catch (err) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 data'));
     }
     try {
         const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
-            countryCOVID19Data.push(data.All.administered);
-            countryCOVID19Data.push(data.All.people_partially_vaccinated);
-            countryCOVID19Data.push(data.All.people_vaccinated);
+            countryCOVID19Data.push(data.All.administered, data.All.people_partially_vaccinated, data.All.people_vaccinated);
         });
     } catch (err) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 vaccination data'));
     }
-    spinnerSearchingCOVID19Data('off');
+    toggleSpinner('COVID-19 data', 'off');
     successCheck();
     return countryCOVID19Data;
 }
-
-// SECTION Event listeners
-
-// Formatting numbers according to user language
-const userDefinedNumberFormat = new Intl.NumberFormat(navigator.language);
-
-// Hide spinner
-document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
-
-// Add new country button
-document.querySelector('.search-bar__btn').addEventListener('click', event => {
-    event.preventDefault();
-    let validCountry = 'yes';
-    const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
-    // Check if country is valid
-    countries.forEach(element => {
-        if (element.countryName === countryToSearch)
-            validCountry = 'no'; // Prevent country repetitions
-    });
-
-    if (countriesListArr.indexOf(countryToSearch) === -1) { // FIXME await until array is actually built to prevent errors
-        displayErrorMessage('country name', new Error('Country name not found'));
-    } else if (validCountry === 'no') {
-        // Country already exists
-        displayErrorMessage('country name', new Error('Country already being displayed'));
-    } else {
-        checkCountryLimitReached(1);
-        buildCountryCard(countryToSearch);
-    }
-});
-
-// Add current country button
-document.querySelector('.add-current-country-btn').addEventListener('click', () => {
-    // Automatic geolocation
-    spinnerSearchingUserLocation('on');
-    // Prevent user from entering country on search box input
-    checkCountryLimitReached(1);
-    // Disable button
-    document.querySelector('.add-current-country-btn').classList.add('hidden');
-    // Get user country
-    navigator.geolocation.getCurrentPosition(getCurrentCoords, getCurrentCoordsError, currentGeolocationOptions);
-});
-
-// Reset button
-let resetButton = document.querySelector('.reset-btn');
-resetButton.addEventListener('click', () => {
-    resetButton.classList.add('hidden');
-    document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
-    countries.splice(0, countries.length);
-    checkCountryLimitReached();
-    // Show 'Add my current country' button
-    document.querySelector('.add-current-country-btn').classList.remove('hidden');
-});
-
-// Switch background button
-let switchBackground = true;
-const switchButton = document.querySelector('.switch-background-btn-container');
-switchButton.addEventListener('click', () => {
-    const backgroundImageClassList = document.querySelector('.background__image').classList;
-    while (switchButton.firstChild) {
-        switchButton.removeChild(switchButton.firstChild);
-    }
-    if (switchBackground) {
-        backgroundImageClassList.add('hidden');
-        const buttonOff = `<div class="switch-background-btn"></div><p>OFF</p>`;
-        switchButton.insertAdjacentHTML('afterbegin', buttonOff);
-    } else {
-        backgroundImageClassList.remove('hidden');
-        const buttonOn = `<p>ON</p><div class="switch-background-btn"></div>`;
-        switchButton.insertAdjacentHTML('afterbegin', buttonOn);
-    }
-    switchBackground = !switchBackground;
-});
 
 // SECTION Countries autocomplete (adapted from https://www.w3schools.com/howto/howto_js_autocomplete.asp)
 
@@ -714,13 +573,8 @@ function autocomplete(inp, arr) {
     });
 }
 
-let countriesListArr = [];
 const getCountriesList = async function () {
     try {
-        // const countriesList = await fetch('https://api.teleport.org/api/countries/').then(res => res.json()).then(data => data);
-        // for (let i = 0; i < countriesList._links['country:items'].length; i++) {
-        //     countriesListArr.push(countriesList._links['country:items'][i].name);
-        // }
         // Using the same API as the one to get COVID-19 cases so no invalid country is displayed
         const countriesList = await fetch('https://covid-api.mmediagroup.fr/v1/cases').then(e => e.json()).then(data => data);
         for (const [key, value] of Object.entries(countriesList)) {
@@ -737,7 +591,88 @@ const getCountriesList = async function () {
         displayErrorMessage('getting list of countries', new Error(err));
     }
 };
-getCountriesList();
-/*initiate the autocomplete function on the "search-bar__input__countryToSearch" element, and pass along the countries array as possible autocomplete values:*/
-autocomplete(document.getElementById("search-bar__input__countryToSearch"), countriesListArr);
 
+const init = async function () {
+
+    // Formatting numbers according to user language
+    userDefinedNumberFormat = new Intl.NumberFormat(navigator.language);
+
+    // TODO Load everything (COVID-19 data, etc.) just once, not every time someone adds a new country.
+    await getCountriesList();
+    /*initiate the autocomplete function on the "search-bar__input__countryToSearch" element, and pass along the countries array as possible autocomplete values:*/
+    autocomplete(document.getElementById("search-bar__input__countryToSearch"), countriesListArr);
+
+    // Hide spinner
+    document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
+
+    // Add new country button
+    document.querySelector('.search-bar__btn').addEventListener('click', event => {
+        event.preventDefault();
+        let validCountry = 'yes';
+        const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
+        // Check if country is valid
+        countries.forEach(element => {
+            if (element.countryName === countryToSearch)
+                validCountry = 'no'; // Prevent country repetitions
+        });
+
+        if (countriesListArr.indexOf(countryToSearch) === -1) { // FIXME await until array is actually built to prevent errors
+            displayErrorMessage('country name', new Error('Country name not found'));
+        } else if (validCountry === 'no') {
+            // Country already exists
+            displayErrorMessage('country name', new Error('Country already being displayed'));
+        } else {
+            lockCountrySearch('on');
+            buildCountryCard(countryToSearch, userDefinedNumberFormat);
+        }
+    });
+
+    // Add current country button
+    document.querySelector('.add-current-country-btn').addEventListener('click', () => {
+        // Automatic geolocation
+        toggleSpinner('user location', 'on');
+        // Prevent user from entering country on search box input
+        lockCountrySearch('on');
+        // Disable button
+        document.querySelector('.add-current-country-btn').classList.add('hidden');
+        // Get user country
+        navigator.geolocation.getCurrentPosition(getUserCoords, getUserCoordsError, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    });
+
+    // Reset button
+    let resetButton = document.querySelector('.reset-btn');
+    resetButton.addEventListener('click', () => {
+        resetButton.classList.add('hidden');
+        document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
+        countries.splice(0, countries.length);
+        lockCountrySearch();
+        // Show 'Add my current country' button
+        document.querySelector('.add-current-country-btn').classList.remove('hidden');
+    });
+
+    // Switch background button
+    let switchBackground = true;
+    const switchButton = document.querySelector('.switch-background-btn-container');
+    switchButton.addEventListener('click', () => {
+        const backgroundImageClassList = document.querySelector('.background__image').classList;
+        while (switchButton.firstChild) {
+            switchButton.removeChild(switchButton.firstChild);
+        }
+        if (switchBackground) {
+            backgroundImageClassList.add('hidden');
+            const buttonOff = `<div class="switch-background-btn"></div><p>OFF</p>`;
+            switchButton.insertAdjacentHTML('afterbegin', buttonOff);
+        } else {
+            backgroundImageClassList.remove('hidden');
+            const buttonOn = `<p>ON</p><div class="switch-background-btn"></div>`;
+            switchButton.insertAdjacentHTML('afterbegin', buttonOn);
+        }
+        switchBackground = !switchBackground;
+    });
+}
+
+init();
