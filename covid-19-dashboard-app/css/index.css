@@ -50,13 +50,15 @@ html {
     background-color: var(--color-background);
     z-index: -20;
 }
-/* NOTE: Adding a 'filter: blur()' to the image added an ugly white border on it, so I found an alternative using 'backdrop-filter', although it's not fully supported */
-/* https://stackoverflow.com/questions/28870932/how-to-remove-white-border-from-blur-background-image (I added extra support check)*/
+/*  NOTE: Adding a 'filter: blur()' to the image added an ugly white border on it, so I found an alternative using 'backdrop-filter', although it's not fully supported.
+    https://stackoverflow.com/questions/28870932/how-to-remove-white-border-from-blur-background-image (I added extra support check).
+    UPDATE: Unfortunately, Chrome displays an annoying flicker effect on the blurred image, so I'll not implement the 'backdrop-filter: blur()' property.
+
 @supports (backdrop-filter: blur(0.5rem)) {
     .background__image::after {
         backdrop-filter: blur(
             0.5rem
-        ); /* apply the blur (it works on Chrome, but not in Safari or Firefox */
+        );
     }
 }
 @supports not (backdrop-filter: blur(0.5rem)) {
@@ -65,6 +67,7 @@ html {
         outline: 0.5rem solid var(--color-dark-green);
     }
 }
+*/
 .background__image::after {
     content: '';
     position: absolute;
@@ -77,6 +80,8 @@ html {
     background: url('../img/fusion-medical-animation-npjP0dCtoxo-unsplash.jpg')
         center no-repeat;
     background-size: cover;
+    filter: blur(0.5rem);
+    outline: 0.5rem solid var(--color-dark-green); /* Hide the white border due to blur */
     z-index: -10;
     width: 100%;
     min-height: 100%;

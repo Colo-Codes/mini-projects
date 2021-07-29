@@ -31,22 +31,19 @@ class CountryCard {
     getComparisonConfirmed(referenceObject) {
         return ((this.infectConfirmed / this.infectPopulation - referenceObject.infectConfirmed / referenceObject.infectPopulation) * 100).toFixed(2);
     }
-
     getComparisonRecovered(referenceObject) {
         return ((this.infectRecovered / this.infectConfirmed - referenceObject.infectRecovered / referenceObject.infectConfirmed) * 100).toFixed(2);
     }
-
     getComparisonDeaths(referenceObject) {
         return ((this.infectDeaths / this.infectConfirmed - referenceObject.infectDeaths / referenceObject.infectConfirmed) * 100).toFixed(2);
     }
-
     getComparisonVaccinations(referenceObject) {
         return ((this.vaccAdministered / this.infectPopulation - referenceObject.vaccAdministered / referenceObject.infectPopulation) * 100).toFixed(2);
     }
 }
 
 // SECTION spinners
-
+// FIXME make one function and use input parameters to select desired outcome
 const spinnerSearchingUserLocation = function (toggle) {
     // Remove possible old message
     removeOldMessage();
@@ -143,7 +140,7 @@ const getCountryName = async function (lat, lng) {
 
         // Handling possible error
         if (userCountry === undefined) {
-            displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed'));
+            displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed. Please reload the page and try again.'));
         } else {
             // Display country card
             await buildCountryCard(userCountry);
@@ -153,7 +150,7 @@ const getCountryName = async function (lat, lng) {
         checkCountryLimitReached(0);
     } catch (err) {
         // displayErrorMessage('getting country name', new Error(err));
-        displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed'));
+        displayErrorMessage('getting country name', new Error('Communication with geocode.xyz API failed. Please reload the page and try again.'));
         // Allow user to enter a country on search box input
         checkCountryLimitReached(0);
     }
@@ -172,7 +169,6 @@ const removeOldMessage = function () {
     // Remove possible old message
     const oldSuccessMessage = document.querySelector('.message-success');
     const oldErrorMessage = document.querySelector('.message-error');
-
     if (oldSuccessMessage) {
         oldSuccessMessage.remove();
     }
@@ -182,7 +178,6 @@ const removeOldMessage = function () {
 }
 
 const displayComparisonSuccessfullyUpdatedMessage = function () {
-    // Remove possible old message
     removeOldMessage();
     // Show new message
     if (countries.length > 0) {
@@ -204,9 +199,7 @@ const displayComparisonSuccessfullyUpdatedMessage = function () {
 };
 
 const displayErrorMessage = function (errorType, errorMessage) {
-    // Remove possible old message
-    removeOldMessage(); // FIXME
-
+    removeOldMessage();
     // Show new message
     const errorMessageToDisplay = `
         <div class="message-error-container">
@@ -299,15 +292,12 @@ const addEventListenerToCardDeleteButton = function (countryInfo) {
                 if (i === 0) {
                     recalculateComparisons();
                 }
-
                 if (countryCards.length <= 1) {
                     hideResetButton();
                 }
             }
         });
-
         checkCountryLimitReached();
-
         if (countries.length === 0) {
             // Show 'Add my current country' button
             document.querySelector('.add-current-country-btn').classList.remove('hidden');
@@ -323,19 +313,16 @@ const checkCountryLimitReached = function (forceLimit = 0, country = '') {
         inputField.disabled = true;
         !(forceLimit === 1) ? inputField.value = 'Country limit reached' : inputField.value = 'Fetching country...';
         searchButton.classList.add('hidden');
-        searchButton.style.display = 'none'; //FIXME
     } else {
         if (searchButton.classList.contains('hidden')) {
             inputField.disabled = false;
             inputField.value = country;
             searchButton.classList.remove('hidden');
-            searchButton.style.display = 'initial';//FIXME
         }
     }
 };
 
 const displayCountryCard = async function (countryInfo) {
-
     let comparisonConfirmed;
     let comparisonRecovered;
     let comparisonDeaths;
@@ -348,7 +335,6 @@ const displayCountryCard = async function (countryInfo) {
         comparisonRecovered = new Intl.NumberFormat().format(countryInfo.getComparisonRecovered(countries[0]));
         comparisonDeaths = new Intl.NumberFormat().format(countryInfo.getComparisonDeaths(countries[0]));
         comparisonVaccinations = new Intl.NumberFormat().format(countryInfo.getComparisonVaccinations(countries[0]));
-
         comparisonHTML = `
         <aside class="country__comparison__list-container">
         <div class="country__comparison__title">
@@ -389,7 +375,6 @@ const displayCountryCard = async function (countryInfo) {
                     `;
     }
 
-    // FIXME data-id could be a country name with spaces
     countryCardHTMLStructure = `
         <article class="full-country-data-container" data-id="${countryInfo.countryName === undefined ? 'Name-not-found' : countryInfo.countryName}">
         <main class="country-container">
@@ -451,20 +436,15 @@ const displayCountryCard = async function (countryInfo) {
     </div>
                             </main >
     `;
-
     countryCardHTMLStructure += comparisonHTML;
-
     document.querySelector('.countries-container').insertAdjacentHTML('beforeend', countryCardHTMLStructure);
     try {
         const flagContainers = document.querySelectorAll('.country__flag-container');
         flagContainers[flagContainers.length - 1].style.backgroundImage = `url(${await getCountryFlag(countryInfo.countryName)})`;
-
     } catch (err) {
         displayErrorMessage('getting country flag', new Error(err));
     }
-
     addEventListenerToCardDeleteButton(countryInfo);
-
     checkCountryLimitReached();
 }
 
@@ -484,10 +464,6 @@ const buildCountryCard = async function (country) {
         displayCountryCard(countryInfo);
         displayResetButton();
     } catch (err) {
-        // if (!countryInfo) {
-        //     displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 data'));
-        // } else {
-        // }
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error(err));
     }
     // Hide 'Add my current country' button
@@ -495,9 +471,8 @@ const buildCountryCard = async function (country) {
 }
 
 const getCovid19Data = async function (country) {
-
-    // Get COVID-19 data (https://github.com/M-Media-Group/Covid-19-API)
-    let countryCOVID19Data = []; // Array
+    // Get COVID-19 API data (https://github.com/M-Media-Group/Covid-19-API)
+    let countryCOVID19Data = [];
     spinnerSearchingCOVID19Data('on');
     try {
         const covid19CurrentData = await fetch(`https://covid-api.mmediagroup.fr/v1/cases?country=${country}`).then(res => res.json()).then(data => {
@@ -508,11 +483,7 @@ const getCovid19Data = async function (country) {
             countryCOVID19Data.push(data.All.population);
         });
     } catch (err) {
-        // if (!covid19CurrentData) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 data'));
-        // } else {
-        //     displayErrorMessage('getting COVID-19 data', new Error(err));
-        // }
     }
     try {
         const covid19VaccinesData = await fetch(`https://covid-api.mmediagroup.fr/v1/vaccines?country=${country}`).then(res => res.json()).then(data => {
@@ -521,23 +492,12 @@ const getCovid19Data = async function (country) {
             countryCOVID19Data.push(data.All.people_vaccinated);
         });
     } catch (err) {
-        // if (!covid19CurrentData) {
         displayErrorMessage('getting COVID-19 data to build country statistics', new Error('The country you entered has no COVID-19 vaccination data'));
-        // } else {
-        //     displayErrorMessage('getting COVID-19 data', new Error(err));
-        // }
     }
-
     spinnerSearchingCOVID19Data('off');
     successCheck();
     return countryCOVID19Data;
 }
-
-// SECTION Search country
-
-// const putCountryNameOnSearchBar = function (country) {
-//     document.querySelector('#search-bar__input__countryToSearch').value = country;
-// }
 
 // SECTION Event listeners
 
@@ -547,10 +507,19 @@ document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
 // Add new country button
 document.querySelector('.search-bar__btn').addEventListener('click', event => {
     event.preventDefault();
+    let validCountry = 'yes';
     const countryToSearch = document.querySelector('#search-bar__input__countryToSearch').value;
     // Check if country is valid
+    countries.forEach(element => {
+        if (element.countryName === countryToSearch)
+            validCountry = 'no'; // Prevent country repetitions
+    });
+
     if (countriesListArr.indexOf(countryToSearch) === -1) { // FIXME await until array is actually built to prevent errors
         displayErrorMessage('country name', new Error('Country name not found'));
+    } else if (validCountry === 'no') {
+        // Country already exists
+        displayErrorMessage('country name', new Error('Country already being displayed'));
     } else {
         checkCountryLimitReached(1);
         buildCountryCard(countryToSearch);
@@ -570,8 +539,9 @@ document.querySelector('.add-current-country-btn').addEventListener('click', () 
 });
 
 // Reset button
-document.querySelector('.reset-btn').addEventListener('click', () => {
-    document.querySelector('.reset-btn').classList.add('hidden');
+let resetButton = document.querySelector('.reset-btn');
+resetButton.addEventListener('click', () => {
+    resetButton.classList.add('hidden');
     document.querySelectorAll('.full-country-data-container').forEach(element => element.remove());
     countries.splice(0, countries.length);
     checkCountryLimitReached();
@@ -581,32 +551,22 @@ document.querySelector('.reset-btn').addEventListener('click', () => {
 
 // Switch background button
 let switchBackground = true;
-document.querySelector('.switch-background-btn-container').addEventListener('click', () => {
-    const switchButton = document.querySelector('.switch-background-btn-container')
+const switchButton = document.querySelector('.switch-background-btn-container');
+switchButton.addEventListener('click', () => {
     const backgroundImageClassList = document.querySelector('.background__image').classList;
+    while (switchButton.firstChild) {
+        switchButton.removeChild(switchButton.firstChild);
+    }
     if (switchBackground) {
         backgroundImageClassList.add('hidden');
-        while (switchButton.firstChild) {
-            switchButton.removeChild(switchButton.firstChild);
-        }
-        const buttonOff = `
-            <div class="switch-background-btn"></div>
-            <p>OFF</p>
-                `;
+        const buttonOff = `<div class="switch-background-btn"></div><p>OFF</p>`;
         switchButton.insertAdjacentHTML('afterbegin', buttonOff);
-        switchBackground = !switchBackground;
     } else {
         backgroundImageClassList.remove('hidden');
-        while (switchButton.firstChild) {
-            switchButton.removeChild(switchButton.firstChild);
-        }
-        const buttonOn = `
-            <p>ON</p>
-            <div class="switch-background-btn"></div>
-                `;
+        const buttonOn = `<p>ON</p><div class="switch-background-btn"></div>`;
         switchButton.insertAdjacentHTML('afterbegin', buttonOn);
-        switchBackground = !switchBackground;
     }
+    switchBackground = !switchBackground;
 });
 
 // SECTION Countries autocomplete (adapted from https://www.w3schools.com/howto/howto_js_autocomplete.asp)
