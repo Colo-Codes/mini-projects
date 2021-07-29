@@ -233,10 +233,10 @@ const recalculateComparisons = function () {
             comparisonContainer.remove();
         } else {
             // Recalculate and render other country cards comparison data
-            const comparisonConfirmed = new Intl.NumberFormat().format(countries[i].getComparisonConfirmed(countries[0]));
-            const comparisonRecovered = new Intl.NumberFormat().format(countries[i].getComparisonRecovered(countries[0]));
-            const comparisonDeaths = new Intl.NumberFormat().format(countries[i].getComparisonDeaths(countries[0]));
-            const comparisonVaccinations = new Intl.NumberFormat().format(countries[i].getComparisonVaccinations(countries[0]));
+            const comparisonConfirmed = countries[i].getComparisonConfirmed(countries[0]);
+            const comparisonRecovered = countries[i].getComparisonRecovered(countries[0]);
+            const comparisonDeaths = countries[i].getComparisonDeaths(countries[0]);
+            const comparisonVaccinations = countries[i].getComparisonVaccinations(countries[0]);
             const comparisonContainerUpdated = `
                 <aside class="country__comparison__list-container">
                     <div class="country__comparison__title">
@@ -245,19 +245,19 @@ const recalculateComparisons = function () {
                     <ul>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Confirmed</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : ((comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : ((comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Recovered</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : ((comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : ((comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Deaths</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : ((comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : ((comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%')}</div>
                         </li>
                         <li class="country__comparison__list__item">
                             <div class="country__comparison__list__item__reference">Vaccinations</div>
-                            <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : ((comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%')}</div>
+                            <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : ((comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%')}</div>
                         </li>
                     </ul>
                     </aside>
@@ -331,10 +331,10 @@ const displayCountryCard = async function (countryInfo) {
     let comparisonHTML;
 
     if (countries.length > 1) {
-        comparisonConfirmed = new Intl.NumberFormat().format(countryInfo.getComparisonConfirmed(countries[0]));
-        comparisonRecovered = new Intl.NumberFormat().format(countryInfo.getComparisonRecovered(countries[0]));
-        comparisonDeaths = new Intl.NumberFormat().format(countryInfo.getComparisonDeaths(countries[0]));
-        comparisonVaccinations = new Intl.NumberFormat().format(countryInfo.getComparisonVaccinations(countries[0]));
+        comparisonConfirmed = countryInfo.getComparisonConfirmed(countries[0]);
+        comparisonRecovered = countryInfo.getComparisonRecovered(countries[0]);
+        comparisonDeaths = countryInfo.getComparisonDeaths(countries[0]);
+        comparisonVaccinations = countryInfo.getComparisonVaccinations(countries[0]);
         comparisonHTML = `
         <aside class="country__comparison__list-container">
         <div class="country__comparison__title">
@@ -343,19 +343,19 @@ const displayCountryCard = async function (countryInfo) {
         <ul>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Confirmed</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + comparisonConfirmed + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonConfirmed) ? 'no data' : (comparisonConfirmed < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonConfirmed) + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Recovered</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + comparisonRecovered + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonRecovered) ? 'no data' : (comparisonRecovered < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonRecovered) + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                     <div class="country__comparison__list__item__reference">Deaths</div>
-                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + comparisonDeaths + '%'}</div>
+                    <div class="country__comparison__list__item__value">${!isFinite(comparisonDeaths) ? 'no data' : (comparisonDeaths < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonDeaths) + '%'}</div>
                     </li>
                     <li class="country__comparison__list__item">
                         <div class="country__comparison__list__item__reference">Vaccinations</div>
-                        <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + comparisonVaccinations + '%'}</div>
+                        <div class="country__comparison__list__item__value">${!isFinite(comparisonVaccinations) ? 'no data' : (comparisonVaccinations < 0 ? '' : '+') + userDefinedNumberFormat.format(comparisonVaccinations) + '%'}</div>
                         </li>
                         </ul>
             </aside>
@@ -395,20 +395,20 @@ const displayCountryCard = async function (countryInfo) {
                     <ul>
                     <li class="country__infections__list__item">
                     <div class="country__infections__list__item__reference">Confirmed</div>
-                    <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectConfirmed) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectConfirmed)
+                    <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectConfirmed) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectConfirmed)
         }</div>
                     </li >
                     <li class="country__infections__list__item">
                                 <div class="country__infections__list__item__reference">Recovered</div>
-                                <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectRecovered) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectRecovered)}</div>
+                                <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectRecovered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectRecovered)}</div>
                             </li>
                             <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Deaths</div>
-                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectDeaths) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectDeaths)}</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectDeaths) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectDeaths)}</div>
                             </li>
                             <li class="country__infections__list__item">
                             <div class="country__infections__list__item__reference">Population</div>
-                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectPopulation) ? 'no data' : new Intl.NumberFormat().format(countryInfo.infectPopulation)}</div>
+                            <div class="country__infections__list__item__value">${!isFinite(countryInfo.infectPopulation) ? 'no data' : userDefinedNumberFormat.format(countryInfo.infectPopulation)}</div>
                             </li>
                             </ul >
                             </div >
@@ -421,15 +421,15 @@ const displayCountryCard = async function (countryInfo) {
             <ul>
                 <li class="country__vaccinations__list__item">
                     <div class="country__vaccinations__list__item__reference">Administered</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccAdministered) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccAdministered)}</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccAdministered) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccAdministered)}</div>
                 </li>
                 <li class="country__vaccinations__list__item">
                     <div class="country__vaccinations__list__item__reference">Partially Vacc.</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccPartially) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccPartially)}</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccPartially) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccPartially)}</div>
                 </li>
                 <li class="country__vaccinations__list__item">
                     <div class="country__vaccinations__list__item__reference">Fully Vacc.</div>
-                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccFully) ? 'no data' : new Intl.NumberFormat().format(countryInfo.vaccFully)}</div>
+                    <div class="country__vaccinations__list__item__value">${!isFinite(countryInfo.vaccFully) ? 'no data' : userDefinedNumberFormat.format(countryInfo.vaccFully)}</div>
                 </li>
             </ul>
         </div>
@@ -500,6 +500,9 @@ const getCovid19Data = async function (country) {
 }
 
 // SECTION Event listeners
+
+// Formatting numbers according to user language
+const userDefinedNumberFormat = new Intl.NumberFormat(navigator.language);
 
 // Hide spinner
 document.querySelector('.spinner').setAttribute("style", "opacity: 0;");
