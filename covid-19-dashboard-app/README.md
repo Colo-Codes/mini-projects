@@ -2,7 +2,7 @@
 
 This is a COVID-19 Dashboard app made in HTML, vanilla CSS and vanilla JavaScript.
 
-Tha main focus was on JavaScript, and I implemented the following:
+The main focus was on JavaScript, and I implemented the following:
 
 -   APIs
 -   Promises
