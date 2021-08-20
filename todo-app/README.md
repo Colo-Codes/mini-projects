@@ -1,8 +1,10 @@
-# Why did I chose to build this project? 🤷‍♂️
+# Why did I choose to build this project? 🤷‍♂️
 
 Doing courses and tutorials is great, but sometimes is difficult to evaluate how much are we actually learning. Watching video after video and coding along with the instructor gives us very good guidance, but it is not a realistic scenario. In a real-world job, we will have to solve problems and start figuring things out by ourselves (with the help of Google, of course 😉). So, to test how much I was actually learning during the JavaScript course I was doing I decided to make a simple To-Do app in HTML, CSS and vanilla JavaScript.
 
-# What did I wanted to implement in the project?
+👉  **You can take a look at the finished live project  [here](https://colo-codes.github.io/mini-projects/todo-app/).** 👈
+
+# What did I want to implement in the project?
 
 As my very first JavaScript project, I decided to apply the following concepts around Object Oriented Programming (OOP):
 - Classes
@@ -51,7 +53,7 @@ The workflow I chose to follow to build the project looks like this:
 
 # Initial planning
 
-The initial planning for this project was somewhat simple, do to its low complexity.
+The initial planning for this project was somewhat simple due to its low complexity.
 
 ## User stories
 
